@@ -1,0 +1,16 @@
+
+You could use a workflow for this.
+
+# ./.github/workflows/rename.yaml
+name: Rename Directory
+
+on:
+  push:
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: git mv bot tgmb
+      - uses: EndBug/add-and-commit@v5.1.0
