@@ -1,5 +1,7 @@
 import os
-import logging
+cwd = os.getcwd()
+(cwd) files = os.listdir(cwd)
+import logging(cwd)print("Files in %r: %s" % (cwd, files))
 from .load import load_env
 from . import reformatter
 from .subproc import ariaDaemonStart, dl, netrc
