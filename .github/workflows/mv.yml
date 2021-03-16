@@ -1,4 +1,4 @@
-# /.github/workflows/rename.yaml
+# .github/workflows/rename.yaml
 name: Rename Directory
 
 on:
@@ -9,5 +9,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git mv tgmb bot
+      - run: git mv bot tgmb
       - uses: EndBug/add-and-commit@v5.1.0
