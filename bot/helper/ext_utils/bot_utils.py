@@ -3,7 +3,7 @@ import re
 import threading
 import time
 
-from bot import download_dict, download_dict_lock
+from tgmb import download_dict, download_dict_lock
 
 LOGGER = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class MirrorStatus:
 
 
 PROGRESS_MAX_SIZE = 100 // 8
-PROGRESS_INCOMPLETE = ['●', '●', '●', '●', '●', '●', '●']
+PROGRESS_INCOMPLETE = ['▏', '▎', '▍', '▌', '▋', '▊', '▉']
 
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
@@ -63,8 +63,7 @@ def getDownloadByGid(gid):
     with download_dict_lock:
         for dl in download_dict.values():
             status = dl.status()
-            if status != MirrorStatus.STATUS_UPLOADING and status != MirrorStatus.STATUS_ARCHIVING\
-                    and status != MirrorStatus.STATUS_EXTRACTING:
+            if status != MirrorStatus.STATUS_UPLOADING and status != MirrorStatus.STATUS_ARCHIVING and status != MirrorStatus.STATUS_EXTRACTING:
                 if dl.gid() == gid:
                     return dl
     return None
@@ -80,10 +79,10 @@ def get_progress_bar_string(status):
     p = min(max(p, 0), 100)
     cFull = p // 8
     cPart = p % 8 - 1
-    p_str = '●' * cFull
+    p_str = '█' * cFull
     if cPart >= 0:
         p_str += PROGRESS_INCOMPLETE[cPart]
-    p_str += '○' * (PROGRESS_MAX_SIZE - cFull)
+    p_str += ' ' * (PROGRESS_MAX_SIZE - cFull)
     p_str = f"[{p_str}]"
     return p_str
 
@@ -104,7 +103,7 @@ def get_readable_message():
                 # if hasattr(download, 'is_torrent'):
                 try:
                     msg += f"\n<b>Info :- Seeders:</b> {download.aria_download().num_seeders}" \
-                        f" & <b>Peers :</b> {download.aria_download().connections}"
+                           f" & <b>Peers :</b> {download.aria_download().connections}"
                 except:
                     pass
             if download.status() == MirrorStatus.STATUS_DOWNLOADING:
@@ -144,19 +143,6 @@ def is_magnet(url: str):
     if magnet:
         return True
     return False
-
-
-def is_mega_link(url: str):
-    return "mega.nz" in url
-
-def get_mega_link_type(url: str):
-    if "folder" in url:
-        return "folder"
-    elif "file" in url:
-        return "file"
-    elif "/#F!" in url:
-        return "folder"
-    return "file"
 
 
 def new_thread(fn):
