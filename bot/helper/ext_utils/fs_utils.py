@@ -24,7 +24,7 @@ def start_cleanup():
 def clean_all():
     aria2.remove_all(True)
     try:
-        shutil.rmtree(DOWNLOAD_DIR)
+        start_cleanup()
     except FileNotFoundError:
         pass
 
