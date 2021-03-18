@@ -13,10 +13,9 @@ RUN apt-get -qq update && \
 
 COPY requirements.txt .
 COPY extract /usr/local/bin
-RUN chmod +x /usr/local/bin/extract
-RUN pip3 install --no-cache-dir -r requirements.txt && \
-    apt-get -qq purge git
-
+COPY pextract /usr/local/bin
+RUN chmod +x /usr/local/bin/extract && chmod +x /usr/local/bin/pextract
+RUN pip3 install --no-cache-dir -r requirements.txt
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -26,3 +25,5 @@ COPY netrc /root/.netrc
 RUN chmod +x aria.sh
 
 CMD ["bash","start.sh"]
+
+
