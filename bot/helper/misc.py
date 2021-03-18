@@ -1,6 +1,6 @@
 from math import ceil
 from pyrogram.types import InlineKeyboardButton
-from wbb import MOD_LOAD, MOD_NOLOAD
+from bot import MOD_LOAD, MOD_NOLOAD
 
 
 class EqInlineKeyboardButton(InlineKeyboardButton):
