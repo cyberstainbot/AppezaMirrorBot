@@ -90,9 +90,9 @@ def get_progress_bar_string(status):
 
 def get_readable_message():
     with download_dict_lock:
-        msg = ""
+        msg = "<b>✥════ @Priyo-Mirror-Bot ════✥</b>"
         for download in list(download_dict.values()):
-            msg += f"<b>Filename :</b> <code>{download.name()}</code>"
+            msg += f"\n📁 𝗙𝗶𝗹𝗲𝗡𝗮𝗺𝗲: <code>{download.name()}</code>"
             msg += f"\n<b>Status :</b> <i>{download.status()}</i>"
             if download.status() != MirrorStatus.STATUS_ARCHIVING and download.status() != MirrorStatus.STATUS_EXTRACTING:
                 msg += f"\n<code>{get_progress_bar_string(download)} {download.progress()}</code>"
@@ -108,7 +108,7 @@ def get_readable_message():
                 except:
                     pass
             if download.status() == MirrorStatus.STATUS_DOWNLOADING:
-                msg += f"\n<b>GID</b>: <code>{download.gid()}</code>"
+                msg += f"\n<b>○ ⛔</b>: <code> /cancel1 {download.gid()}</code>"
             msg += "\n\n"
         return msg
 
