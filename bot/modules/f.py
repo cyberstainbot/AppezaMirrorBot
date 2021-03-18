@@ -1,7 +1,7 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from wbb import app
+from bot import app
 from pyrogram import filters
-from wbb.utils.errors import capture_err
+from bot.utils.errors import capture_err
 
 i = 0
 m = None
