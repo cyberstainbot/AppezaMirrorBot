@@ -17,20 +17,6 @@ class CustomFilters:
 
     authorized_user = _AuthorizedUserFilter()
 
-    class _Admins(BaseFilter):
-        def filter(self, message):
-            id = message.from_user.id
-            return bool(id in ADMINS)
-
-    admins = _Admins()
-
-    class _Owners(BaseFilter):
-        def filter(self, message):
-            id = message.from_user.id
-            return bool(id in OWNERS)
-
-    owners = _Owners()
-
     class _AuthorizedChat(BaseFilter):
         def filter(self, message):
             return bool(message.chat.id in AUTHORIZED_CHATS)
