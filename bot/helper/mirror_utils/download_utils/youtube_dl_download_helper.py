@@ -1,6 +1,6 @@
 from .download_helper import DownloadHelper
 import time
-from youtube_dl import YoutubeDL, DownloadError
+from yt_dlp import YoutubeDL, DownloadError
 from bot import download_dict_lock, download_dict
 from ..status_utils.youtube_dl_download_status import YoutubeDLDownloadStatus
 import logging
@@ -43,7 +43,9 @@ class YoutubeDLHelper(DownloadHelper):
         self.opts = {
             'progress_hooks': [self.__onDownloadProgress],
             'logger': MyLogger(self),
-            'usenetrc': True
+            'usenetrc': True,
+            'external_downloader' : 'aria2c',
+            'allow_multiple_audio_streams' : True
         }
         self.__download_speed = 0
         self.download_speed_readable = ''
@@ -123,7 +125,7 @@ class YoutubeDLHelper(DownloadHelper):
         if 'entries' in result:
             video = result['entries'][0]
             for v in result['entries']:
-                if v.get('filesize'):
+                if v and v.get('filesize'):
                     self.size += float(v['filesize'])
             # For playlists, ydl.prepare-filename returns the following format: <Playlist Name>-<Id of playlist>.NA
             self.name = name.split(f"-{result['id']}")[0]
@@ -151,6 +153,9 @@ class YoutubeDLHelper(DownloadHelper):
             self.onDownloadError("Download Cancelled by User!")
 
     def add_download(self, link, path, qual, name):
+        pattern = '^.*(youtu\.be\/|youtube.com\/)(playlist?)'
+        if re.match(pattern, link):
+            self.opts['ignoreerrors'] = True
         self.__onDownloadStart()
         self.extractMetaData(link, qual, name)
         LOGGER.info(f"Downloading with YT-DL: {link}")
