@@ -28,22 +28,22 @@ def stats(update, context):
     cpuUsage = psutil.cpu_percent(interval=0.5)
     memory = psutil.virtual_memory().percent
     disk = psutil.disk_usage('/').percent
-    stats = f'<b>Bot Uptime:</b> {currentTime}\n' \
-            f'<b>Total disk space:</b> {total}\n' \
-            f'<b>Used:</b> {used}  ' \
-            f'<b>Free:</b> {free}\n\n' \
+    stats = f'<b>Bot Uptime ⏲️:</b> {currentTime}\n' \
+            f'<b>Total disk space 🗂️:</b> {total}\n' \
+            f'<b>Used 🗃️:</b> {used}  ' \
+            f'<b>Free 🗃️:</b> {free}\n\n' \
             f'📊Data Usage📊\n<b>Upload:</b> {sent}\n' \
             f'<b>Down:</b> {recv}\n\n' \
-            f'<b>CPU:</b> {cpuUsage}% ' \
-            f'<b>RAM:</b> {memory}% ' \
-            f'<b>Disk:</b> {disk}%'
+            f'<b>CPU 🖥️:</b> {cpuUsage}% ' \
+            f'<b>RAM 🔨:</b> {memory}% ' \
+            f'<b>Disk 💽:</b> {disk}%'
     sendMessage(stats, context.bot, update)
 
 
 @run_async
 def start(update, context):
     start_string = f'''
-This is a bot which can mirror all your links to Google drive!
+Hey, Welcome to my area! This is * Priyo-Mirror-bot * which can mirror all your links to Google drive!
 Type /{BotCommands.HelpCommand} to get a list of available commands
 '''
     sendMessage(start_string, context.bot, update)
