@@ -145,11 +145,11 @@ class MirrorListener(listeners.MirrorListeners):
         pass
 
     def onUploadComplete(self, link: str, size):
-        with download_dict_lock:
-            msg = f'<b>📁 Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>Size : </b><code>{size}</code>'
+        with download_dict_lock:d
+            msg = f'<b>📁 Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>📂 Total Size : </b><code>{download_dict[self.uid].size()}</code>\n' \
                   f' \n' \
                   f'📌 Join To Our Team Drive To Gain Access To The G-Drive Link.\n' \
-                  f'📌 Do Not Share G-Drive / Index Link Outside The Group. \n' \
+                  f'📌 Do Not Share G-Drive / Index Link Outside The Group.\n' \
                   f' \n' \
                   f'🔰 For Updates Join : @PriyoMirror\n'
             buttons = button_build.ButtonMaker()
