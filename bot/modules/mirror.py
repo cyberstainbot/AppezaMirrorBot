@@ -148,8 +148,8 @@ class MirrorListener(listeners.MirrorListeners):
         with download_dict_lock:
             msg = f'<b>📁 Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>🗃️ Size : </b><code>{size}</code>\n' \
                   f' \n' \
-                  f'🛡️ Hey I'm Priyo.Welcome To My Area.\n' \
-                  f'🛡️ Don’t Share Gdrive/Index links outside the Group.\n' \
+                  f'🛡️ Hey I'm Priyo Welcome To My Area.\n' \
+                  f'🛡️ Don’t Share Gdrive/Index Links Outside The Group.\n' \
                   f' \n' \
                   f'🔰Join To Mirror Group @PriyoMirrors\n'
             buttons = button_build.ButtonMaker()
