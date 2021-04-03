@@ -146,7 +146,12 @@ class MirrorListener(listeners.MirrorListeners):
 
     def onUploadComplete(self, link: str, size):
         with download_dict_lock:
-            msg = f'<b>Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>Size : </b><code>{size}</code>'
+            msg = f'<b>📁 Filename : </b><code>{download_dict[self.uid].name()}</code>\n<b>💾 Size : </b><code>{size}</code>'
+                  f' \n' \
+                  f'📌 Join To My Mirror Group & Mirror link within a second.\n' \
+                  f'📌 Don’t Share Gdrive/Index links outside The Group.\n' \
+                  f' \n' \
+                  f'🔰Join To Our Mirror Group @PriyoMirrors\n'
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = requests.get('https://{}/api?api={}&url={}&format=text'.format(SHORTENER, SHORTENER_API, link)).text
