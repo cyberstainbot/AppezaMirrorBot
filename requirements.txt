@@ -13,6 +13,8 @@ beautifulsoup4>=4.8.2,<4.8.10
 Pyrogram==0.18.0
 TgCrypto>=1.1.1,<1.1.10
 https://github.com/yt-dlp/yt-dlp/archive/master.zip
+psycopg2-binary
+git+https://github.com/yt-dlp/yt-dlp
 lxml
 telegraph
 appdirs
