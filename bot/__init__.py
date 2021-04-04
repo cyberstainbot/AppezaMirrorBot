@@ -94,6 +94,18 @@ except KeyError as e:
     LOGGER.error("One or more env variables missing! Exiting now")
     exit(1)
 
+LOGGER.info("Generating USER_SESSION_STRING")
+with Client(':memory:', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN) as app:
+    USER_SESSION_STRING = app.export_session_string()
+
+#Generate Telegraph Token
+sname = ''.join(random.SystemRandom().choices(string.ascii_letters, k=8))
+LOGGER.info("Generating Telegraph Token using '" + sname + "' name")
+telegraph = Telegraph()
+telegraph.create_account(short_name=sname)
+telegraph_token = telegraph.get_access_token()
+LOGGER.info("Telegraph Token Generated: '" + telegraph_token + "'")
+
 try:
     UPTOBOX_TOKEN = getConfig('UPTOBOX_TOKEN')
 except KeyError:
@@ -184,10 +196,10 @@ try:
     if len(SHORTENER) == 0 or len(SHORTENER_API) == 0:
         raise KeyError
 except KeyError:
-    SHORTENER = None
+        SHORTENER = None
     SHORTENER_API = None
-    
-    ADMINS = set()
+
+ADMINS = set()
 if os.path.exists('admins.txt'):
     with open('admins.txt', 'r+') as f:
         lines = f.readlines()
@@ -201,7 +213,6 @@ if os.path.exists('owners.txt'):
         lines = f.readlines()
         for line in lines:
             #    LOGGER.info(line.split())
-            OWNERS.add(int(line.split()[0]))
 
 updater = tg.Updater(token=BOT_TOKEN,use_context=True)
 bot = updater.bot
