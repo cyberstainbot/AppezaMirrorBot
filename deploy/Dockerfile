@@ -1,3 +1,3 @@
-FROM ksssomesh12/tg-mirror-bot:master-latest
+FROM iamliquidx/megasdk:latest
 WORKDIR /usr/src/app
 COPY . .

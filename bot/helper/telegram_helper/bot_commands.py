@@ -7,7 +7,6 @@ class _BotCommands:
         self.CancelMirror = 'cancel'
         self.CancelAllCommand = 'cancelall'
         self.ListCommand = 'list'
-        self.SpeedCommand = 'speedtest'
         self.StatusCommand = 'status'
         self.AuthorizeCommand = 'authorize'
         self.UnAuthorizeCommand = 'unauthorize'
@@ -16,11 +15,12 @@ class _BotCommands:
         self.StatsCommand = 'stats'
         self.HelpCommand = 'help'
         self.LogCommand = 'log'
-        self.CloneCommand = "clone"
+        self.SpeedCommand = 'speedtest'
+        self.CloneCommand = 'clone'
         self.WatchCommand = 'watch'
         self.TarWatchCommand = 'tarwatch'
-        self.deleteCommand = 'del'
+        self.DeleteCommand = 'del'
         self.UsageCommand = 'usage'
-        self.ShellCommand = 'shell'
+        self.RepoCommand = 'repo'
 
 BotCommands = _BotCommands()
