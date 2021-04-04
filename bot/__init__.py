@@ -197,7 +197,7 @@ try:
         raise KeyError
 except KeyError:
         SHORTENER = None
-    SHORTENER_API = None
+        SHORTENER_API = None
 
 ADMINS = set()
 if os.path.exists('admins.txt'):
