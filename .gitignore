@@ -11,3 +11,4 @@ data*
 authorized_chats.txt
 log.txt
 accounts/*
+bot/helper/mirror_utils/upload_utils/gdriveTools.py
