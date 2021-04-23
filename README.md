@@ -1,7 +1,7 @@
 [![Priiiyo](https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg)](http://t.me/PriiiyoMirror)
 
 # Priiiyo Mirror Bot
-This is a telegram bot writen in python for mirroring files on the internet to our beloved Google Drive.
+A Telegram bot which can mirror all your links to Google drive! This is the Modified version.
 
 # Features supported:
 
@@ -12,6 +12,7 @@ This is a telegram bot writen in python for mirroring files on the internet to o
 - Download/upload progress, speeds and ETAs
 - Mirror all youtube-dl supported links
 - Docker support
+- Stable Mega.nz support
 - Uploading To Team Drives
 - Index Link support
 - Service account support
@@ -97,48 +98,39 @@ cp config_sample.env config.env
 ```
 _____REMOVE_THIS_LINE_____=True
 ```
-### Required Fields
-
-- **BOT_TOKEN** : The telegram bot token that you get from [@BotFather](https://t.me/botfather).
-- **GDRIVE_FOLDER_ID** : This is the folder ID of the Google Drive folder to which you want to upload all the mirrors.
-- **DOWNLOAD_DIR** : The path to the folder where the downloads will be downloaded locally, before uploading to Google Drive.
-- **OWNER_ID** : The Telegram user ID (not username) of the owner of the bot.
-- **DOWNLOAD_STATUS_UPDATE_INTERVAL** : A short interval of time in seconds after which the Mirror progress message is updated (5 seconds at least).
-- **AUTO_DELETE_MESSAGE_DURATION** : Interval of time (in seconds), after which the bot deletes its message (and command message) which is expected to be viewed instantly (set to '-1' to never automatically delete messages).
-- **TELEGRAM_API** : This is to authenticate to your telegram account for downloading Telegram files. You can get this from [here](https://my.telegram.org).
-- **TELEGRAM_HASH** : This is to authenticate to your telegram account for downloading Telegram files. You can get this from [here](https://my.telegram.org).
-- **MAX_DOWNLOAD_SPEED** : Set the maximum download speed. By default, it is set to '0' (unlimited).
-- **MAX_CONCURRENT_DOWNLOADS** : Set the maximum concurrent downloads. By default, it is set to '3'.
-- **TRACKERSLIST** : Set the URL of the trackerslist text file. By default, it is set to 'https://trackerslist.com/all_aria2.txt'.
-- **USE_TELEGRAPH** : Set to "true" to use Telegra.ph for search results from '/list' bot command, or else set to "false".
-
-**NOTE:** The trackerslist text file must contain tracker URLs in a single line, separated by commas, as required by 'aria2c'.
-
-### Optional Fields (leave empty if unsure)
-
-- **IS_TEAM_DRIVE** : Set to "true" if GDRIVE_FOLDER_ID is from a Team Drive, or else set to "false" or leave it empty.
-- **USE_SERVICE_ACCOUNTS** : Whether to use service accounts or not. For this to work see  "Using service accounts" section below.
-- **STOP_DUPLICATE_MIRROR** : Set this to "true", if you want to check for duplicate files (using file name, and not file hash) in Google Drive matching the requested download and stop the download if found any.
-- **INDEX_URL** : Refer to [GDIndex repo](https://github.com/maple3142/GDIndex/). The URL should not have any trailing '/'.
-- **MEGA_API_KEY**: Mega.nz api key to mirror mega.nz links. Get it from [Mega SDK Page](https://mega.nz/sdk)
-- **MEGA_EMAIL_ID**: Your email id you used to sign up on mega.nz for using premium accounts (Leave th)
-- **MEGA_PASSWORD**: Your password for your mega.nz account
+Fill up rest of the fields. Meaning of each fields are discussed below:
+- **BOT_TOKEN**: The telegram bot token that you get from [@BotFather](https://t.me/BotFather)
+- **GDRIVE_FOLDER_ID**: This is the folder ID of the Google Drive Folder to which you want to upload all the mirrors.
+- **DOWNLOAD_DIR**: The path to the local folder where the downloads should be downloaded to
+- **DOWNLOAD_STATUS_UPDATE_INTERVAL**: A short interval of time in seconds after which the Mirror progress message is updated. (I recommend to keep it 5 seconds at least)  
+- **OWNER_ID**: The Telegram user ID (not username) of the owner of the bot
+- **AUTHORIZED_CHATS**: Fill user_id and chat_id of you want to authorize.
+- **AUTO_DELETE_MESSAGE_DURATION**: Interval of time (in seconds), after which the bot deletes it's message (and command message) which is expected to be viewed instantly. Note: Set to -1 to never automatically delete messages
+- **IS_TEAM_DRIVE**: (Optional field) Set to `True` if GDRIVE_FOLDER_ID is from a Team Drive else False or Leave it empty.
+- **USE_SERVICE_ACCOUNTS**: (Optional field) (Leave empty if unsure) Whether to use service accounts or not. For this to work see "Using service accounts" section below.
+- **INDEX_URL**: (Optional field) Refer to https://github.com/maple3142/GDIndex/ The URL should not have any trailing '/'
+- **API_KEY**: This is to authenticate to your telegram account for downloading Telegram files. You can get this from https://my.telegram.org DO NOT put this in quotes.
+- **API_HASH**: This is to authenticate to your telegram account for downloading Telegram files. You can get this from https://my.telegram.org
+- **MEGA_KEY**: Mega.nz api key to mirror mega.nz links. Get it from [Mega SDK Page](https://mega.nz/sdk)
+- **MEGA_USERNAME**: Your mega email id (You can leave it empty, it will start megasdkrest server in anonymous mode)
+- **MEGA_PASSWORD**: Your password for your mega.nz account. (**NOTE**: You must deactivate 2FA to use the account with the bot otherwise bot will not be able to sign in)
+- **STOP_DUPLICATE_MIRROR**: (Optional field) (Leave empty if unsure) if this field is set to `True` , bot will check file in drive, if it is present in drive, downloading will ne stopped. (Note - File will be checked using filename, not using filehash, so this feature is not perfect yet)
 - **ENABLE_FILESIZE_LIMIT**: Set it to `True` if you want to use `MAX_TORRENT_SIZE`.
+- **MAX_TORRENT_SIZE**: To limit the torrent mirror size, Fill The amount you want to limit, examples: if you fill `15` it will limit `15gb`.
 - **BLOCK_MEGA_FOLDER**: (Optional field) If you want to remove mega.nz folder support, set it to `True`.
 - **BLOCK_MEGA_LINKS**: (Optional field) If you want to remove mega.nz mirror support (bcoz it's too much buggy and unstable), set it to `True`.
 - **UPTOBOX_TOKEN**: Uptobox token to mirror uptobox links. Get it from [Uptobox Premium Account](https://uptobox.com/my_account).
-- **SHORTENER** : URL of the Shortener.
-- **SHORTENER_API** : API Key of the Shortener.
+- **SHORTENER_API**: Fill your shortener api key if you are using shortener.
+- **SHORTENER**: (Optional field) if you want to use shortener in Gdrive and index link, fill shotener url here. Examples:
+```
+exe.io
+gplinks.in
+shrinkme.io
+urlshortx.com
+shortzon.com
+```
 
-        Supported Shorteners:
-        
-        > exe.io
-        > gplinks.io
-        > shrinkme.io
-        > urlshortx.com
-        > shortzon.com
-        
-        Additionally, some other shorteners are also supported unofficially.
+**Note**: Above are the supported url shorteners. Except these only some url shorteners are supported. If you want to use any other url shortener then first ask me that shortener is supported or not.
 
 </details>
 

@@ -2,13 +2,12 @@ import requests
 from telegram.ext import CommandHandler
 from telegram import InlineKeyboardMarkup
 
-from pmb import Interval, INDEX_URL, BUTTON_THREE_NAME, BUTTON_THREE_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, BLOCK_MEGA_LINKS, BLOCK_MEGA_FOLDER
+from pmb import Interval, INDEX_URL,LOGGER, MEGA_KEY, BUTTON_THREE_NAME, BUTTON_THREE_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, BLOCK_MEGA_LINKS, BLOCK_MEGA_FOLDER
 from pmb import dispatcher, DOWNLOAD_DIR, DOWNLOAD_STATUS_UPDATE_INTERVAL, download_dict, download_dict_lock, SHORTENER, SHORTENER_API
 from pmb.helper.ext_utils import fs_utils, bot_utils
-from pmb.helper.ext_utils.bot_utils import setInterval, get_mega_link_type
+from pmb.helper.ext_utils.bot_utils import setInterval
 from pmb.helper.ext_utils.exceptions import DirectDownloadLinkException, NotSupportedExtractionArchive
 from pmb.helper.mirror_utils.download_utils.aria2_download import AriaDownloadHelper
-from pmb.helper.mirror_utils.download_utils.mega_downloader import MegaDownloadHelper
 from pmb.helper.mirror_utils.download_utils.direct_link_generator import direct_link_generator
 from pmb.helper.mirror_utils.download_utils.telegram_downloader import TelegramDownloadHelper
 from pmb.helper.mirror_utils.status_utils import listeners
@@ -20,6 +19,7 @@ from pmb.helper.telegram_helper.bot_commands import BotCommands
 from pmb.helper.telegram_helper.filters import CustomFilters
 from pmb.helper.telegram_helper.message_utils import *
 from pmb.helper.telegram_helper import button_build
+from pmb.helper.mirror_utils.download_utils.mega_download import MegaDownloader
 import urllib
 import pathlib
 import os
@@ -148,9 +148,9 @@ class MirrorListener(listeners.MirrorListeners):
         with download_dict_lock:
             msg = f'<b>🗂 𝗙𝗶𝗹𝗲𝗡𝗮𝗺𝗲 : </b><code>{download_dict[self.uid].name()}</code>\n<b>📦 𝐓𝐨𝐭𝐚𝐥 𝐒𝐢𝐳𝐞 : </b><code>{size}</code>\n' \
                   f' \n' \
-                  f'🔅𝙒𝙚𝙡𝙘𝙤𝙢𝙚 𝙏𝙤 𝙋𝙧𝙞𝙮𝙤 𝙈𝙞𝙧𝙧𝙤𝙧 𝙕𝙤𝙣𝙀.\n' \
+                  f'🔅𝙋𝙧𝙞𝙞𝙞𝙮𝙤 𝙈𝙞𝙧𝙧𝙤𝙧 𝙕𝙤𝙣𝙀\n' \
                   f' \n' \
-                  f'🔅𝙈𝙞𝙧𝙧𝙤𝙧 𝙂𝙧𝙤𝙪𝙥 @PriiiyoMirror\n'
+                  f'🔅𝙂𝙧𝙤𝙪𝙥 : @PriiiyoMirror\n'
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={link}&format=text').text
@@ -179,7 +179,7 @@ class MirrorListener(listeners.MirrorListeners):
             else:
                 uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
             if uname is not None:
-                msg += f'\n\n<b>👤 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗿 :👉</b> {uname}\n\n▫️#Uploaded To Team Drive ✓ \n\n🚫 𝘿𝙤 𝙉𝙤𝙩 𝙎𝙝𝙖𝙧𝙚 𝙄𝙣𝙙𝙚𝙭 𝙇𝙞𝙣𝙠 \n\n✅ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 : <b>@PriiiyoBOTs</b>'
+                msg += f'\n\n<b>👤 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗿 : 👉</b> {uname}\n\n▫️#Uploaded To Team Drive ✓ \n\n🚫 𝘿𝙤 𝙉𝙤𝙩 𝙎𝙝𝙖𝙧𝙚 𝙄𝙣𝙙𝙚𝙭 𝙇𝙞𝙣𝙠 \n\n✅ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 : <b>@PriiiyoBOTs</b>'
             try:
                 fs_utils.clean_download(download_dict[self.uid].path())
             except FileNotFoundError:
@@ -273,18 +273,14 @@ def _mirror(bot, update, isTar=False, extract=False):
     except DirectDownloadLinkException as e:
         LOGGER.info(f'{link}: {e}')
     listener = MirrorListener(bot, update, pswd, isTar, tag, extract)
-    if bot_utils.is_mega_link(link):
-        link_type = get_mega_link_type(link)
-        if link_type == "folder" and BLOCK_MEGA_FOLDER:
-            sendMessage("Mega folder are blocked!", bot, update)
-        elif BLOCK_MEGA_LINKS:
-            sendMessage("Mega links are blocked bcoz mega downloading is too much unstable and buggy. mega support will be added back after fix", bot, update)
-        else:
-            mega_dl = MegaDownloadHelper()
-            mega_dl.add_download(link, f'{DOWNLOAD_DIR}/{listener.uid}/', listener)
-            sendStatusMessage(update, bot)
+    if bot_utils.is_mega_link(link) and MEGA_KEY is not None and not BLOCK_MEGA_LINKS:
+        mega_dl = MegaDownloader(listener)
+        mega_dl.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/')
+        sendStatusMessage(update, bot)
+    elif bot_utils.is_mega_link(link) and BLOCK_MEGA_LINKS:
+        sendMessage("Mega links are blocked. Dont try to mirror mega links.", bot, update)
     else:
-        ariaDlManager.add_download(link, f'{DOWNLOAD_DIR}/{listener.uid}/', listener, name)
+        ariaDlManager.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener, name)
         sendStatusMessage(update, bot)
     if len(Interval) == 0:
         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))

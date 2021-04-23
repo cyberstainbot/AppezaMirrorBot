@@ -1,6 +1,6 @@
 {
     "name": "priiiyo-mirror-bot ",
-    "description": "Telegram mirror bot with python",
+    "description": "A Telegram bot which can mirror all your links to Google drive!",
     "logo": "https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg",
     "keywords": [
       "bot",

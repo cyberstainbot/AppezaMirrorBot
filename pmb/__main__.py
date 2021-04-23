@@ -6,9 +6,12 @@ from pyrogram import idle
 from pmb import app
 from os import execl, kill, path, remove
 from sys import executable
+from datetime import datetime
+import pytz
 import time
 from telegram import ParseMode
-from telegram.ext import CommandHandler
+from telegram import Update
+from telegram.ext import CallbackContext, CommandHandler
 from pmb import bot, dispatcher, updater, botStartTime, AUTHORIZED_CHATS
 from pmb.helper.ext_utils import fs_utils
 from pmb.helper.telegram_helper.bot_commands import BotCommands
@@ -24,9 +27,11 @@ from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clon
 from pyrogram import idle
 from pmb import app
 
+now=datetime.now(pytz.timezone('Asia/Dhaka'))
 
-def stats(update, context):
+def stats(update: Update, context: CallbackContext):
     currentTime = get_readable_time(time.time() - botStartTime)
+    current = now.strftime('%Y/%m/%d %I:%M:%S')
     total, used, free = shutil.disk_usage('.')
     total = get_readable_file_size(total)
     used = get_readable_file_size(used)
@@ -37,6 +42,7 @@ def stats(update, context):
     memory = psutil.virtual_memory().percent
     disk = psutil.disk_usage('/').percent
     stats = f'<b>Bot UpTime ⏲:</b> {currentTime}\n\n' \
+            f'<b>Start Time 🔊:</b> {current}\n' \
             f'<b>CPU Usage 🖥️:</b> {cpuUsage}%\n' \
             f'<b>RAM Usage 🚀:</b> {memory}%\n' \
             f'<b>Disk Usage 📦:</b> {disk}%\n\n' \
@@ -49,24 +55,24 @@ def stats(update, context):
     update.effective_message.reply_photo("https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg", stats, parse_mode=ParseMode.HTML)
 
 
-def start(update, context):
+def start(update: Update, context: CallbackContext):
     start_string = f'''
 This is a bot which can mirror all your links to Google drive!
 
-👲 Moded By: @Priiiyo
+👲 Modded By: @Priiiyo
 
 Type /{BotCommands.HelpCommand} to get a list of available commands
 '''
     update.effective_message.reply_photo("https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg", start_string, parse_mode=ParseMode.MARKDOWN)
 
 
-def chat_list(update, context):
+def chat_list(update: Update, context: CallbackContext):
     chatlist =''
     chatlist += '\n'.join(str(id) for id in AUTHORIZED_CHATS)
     sendMessage(f'<b>Authorized List:</b>\n{chatlist}\n', context.bot, update)
 
 
-def repo(update, context):
+def repo(update: Update, context: CallbackContext):
     bot.send_message(update.message.chat_id,
     reply_to_message_id=update.message.message_id,
     text="Repo: https://github.com/priiiyo/priiiyo-mirror-bot\nGroup: https://t.me/PriiiyoMirror", disable_web_page_preview=True)
@@ -82,18 +88,18 @@ def restart(update, context):
     os.execl(executable, executable, "-m", "pmb")
 
 
-def ping(update, context):
+def ping(update: Update, context: CallbackContext):
     start_time = int(round(time.time() * 1000))
-    reply = sendMessage("Starting Ping", context.bot, update)
+    reply = sendMessage("Starting Ping...", context.bot, update)
     end_time = int(round(time.time() * 1000))
     editMessage(f'{end_time - start_time} ms', reply)
 
 
-def log(update, context):
+def log(update: Update, context: CallbackContext):
     sendLogFile(context.bot, update)
 
 
-def bot_help(update, context):
+def bot_help(update: Update, context: CallbackContext):
     help_string = f'''
 /{BotCommands.HelpCommand}: To get this message
 
@@ -146,7 +152,7 @@ def main():
             chat_id, msg_id = map(int, f)
         bot.edit_message_text("Restarted successfully!", chat_id, msg_id)
         os.remove(".restartmsg")
-
+        
     start_handler = CommandHandler(BotCommands.StartCommand, start,
                                    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
     ping_handler = CommandHandler(BotCommands.PingCommand, ping,

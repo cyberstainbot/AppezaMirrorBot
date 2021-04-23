@@ -14,7 +14,7 @@ def cloneNode(update,context):
     else:
         uname = f'<a href="tg://user?id={update.message.from_user.id}">{update.message.from_user.first_name}</a>'
     if uname is not None:
-            cc = f'\n\n👤 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗿 : {uname}'
+            cc = f'\n\n👤 𝗖𝗹𝗼𝗻𝗲𝗱 𝗕𝘆 : {uname}'
     if len(args) > 1:
         link = args[1]
         msg = sendMessage(f"Cloning: <code>{link}</code>",context.bot,update)

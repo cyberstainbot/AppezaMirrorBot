@@ -12,6 +12,10 @@ from telegraph import Telegraph
 import socket
 from pmb.helper.config import dynamic
 from pmb.helper.config.load import update_dat
+import faulthandler
+faulthandler.enable()
+from megasdkrestclient import MegaSdkRestClient, errors as mega_err
+import subprocess
 
 socket.setdefaulttimeout(600)
 
@@ -135,18 +139,30 @@ except KeyError:
     logging.warning('UPTOBOX_TOKEN not provided!')
     UPTOBOX_TOKEN = None
 try:
-    MEGA_API_KEY = getConfig('MEGA_API_KEY')
+    MEGA_KEY = getConfig('MEGA_KEY')
+
 except KeyError:
-    logging.warning('MEGA API KEY not provided!')
-    MEGA_API_KEY = None
-try:
-    MEGA_EMAIL_ID = getConfig('MEGA_EMAIL_ID')
-    MEGA_PASSWORD = getConfig('MEGA_PASSWORD')
-    if len(MEGA_EMAIL_ID) == 0 or len(MEGA_PASSWORD) == 0:
-        raise KeyError
-except KeyError:
-    logging.warning('MEGA Credentials not provided!')
-    MEGA_EMAIL_ID = None
+    MEGA_KEY = None
+    LOGGER.info('MEGA API KEY NOT AVAILABLE')
+if MEGA_KEY is not None:
+    try:
+        MEGA_USERNAME = getConfig('MEGA_USERNAME')
+        MEGA_PASSWORD = getConfig('MEGA_PASSWORD')
+        # Start megasdkrest binary
+        subprocess.Popen(["megasdkrest", "--apikey", MEGA_KEY])
+        time.sleep(3)
+        mega_client = MegaSdkRestClient('http://localhost:6090')
+        try:
+            mega_client.login(MEGA_USERNAME, MEGA_PASSWORD)
+        except mega_err.MegaSdkRestClientException as e:
+            logging.error(e.message['message'])
+            exit(0)
+    except KeyError:
+        LOGGER.info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
+        MEGA_USERNAME = None
+        MEGA_PASSWORD = None
+else:
+    MEGA_USERNAME = None
     MEGA_PASSWORD = None
 try:
     INDEX_URL = getConfig('INDEX_URL')

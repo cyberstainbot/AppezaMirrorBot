@@ -64,7 +64,7 @@ def getDownloadByGid(gid):
     with download_dict_lock:
         for dl in download_dict.values():
             status = dl.status()
-            if status != MirrorStatus.STATUS_UPLOADING and status != MirrorStatus.STATUS_ARCHIVING\
+            if status != MirrorStatus.STATUS_UPLOADING and status != MirrorStatus.STATUS_ARCHIVING \
                     and status != MirrorStatus.STATUS_EXTRACTING:
                 if dl.gid() == gid:
                     return dl
@@ -133,24 +133,16 @@ def get_readable_time(seconds: int) -> str:
     return result
 
 
+def is_mega_link(url: str):
+    return "mega.nz" in url
+
+
 def is_url(url: str):
     url = re.findall(URL_REGEX, url)
     if url:
         return True
     return False
 
-
-def is_mega_link(url: str):
-    return "mega.nz" in url
-
-def get_mega_link_type(url: str):
-    if "folder" in url:
-        return "folder"
-    elif "file" in url:
-        return "file"
-    elif "/#F!" in url:
-        return "folder"
-    return "file"
 
 def is_magnet(url: str):
     magnet = re.findall(MAGNET_REGEX, url)
