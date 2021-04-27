@@ -291,5 +291,6 @@ Thanks to:
 - [magneto261290](https://github.com/magneto261290/) for some features
 - [ksssomesh12](https://github.com/ksssomesh12/tg-mirror-bot) for some special features
 - [SVR666](https://github.com/SVR666/) for some features & fixes
+- [Breakdowns](https://github.com/breakdowns/slam-mirrorbot) for some cool modules
 
 and many more people who aren't mentioned here, but may be found in [Contributors](https://github.com/priiiyo/priiiyo-mirror-bot/graphs/contributors).
