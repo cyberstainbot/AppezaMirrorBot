@@ -5,7 +5,7 @@ import aiohttp
 import feedparser
 from telegram.ext import CommandHandler
 from telegram import ParseMode
-from pmb import dispatcher
+from pmb import dispatcher, IMAGE_URL
 from urllib.parse import quote as urlencode, urlsplit
 from pyrogram import Client, filters
 from pyrogram.parser import html as pyrogram_html

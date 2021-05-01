@@ -12,7 +12,7 @@ import time
 from telegram import ParseMode
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
-from pmb import bot, dispatcher, updater, botStartTime, AUTHORIZED_CHATS
+from pmb import bot, dispatcher, updater, botStartTime, AUTHORIZED_CHATS, IMAGE_URL
 from pmb.helper.ext_utils import fs_utils
 from pmb.helper.telegram_helper.bot_commands import BotCommands
 from pmb.helper.telegram_helper.message_utils import *
@@ -45,14 +45,14 @@ def stats(update: Update, context: CallbackContext):
             f'<b>Start Time 🔊:</b> {current}\n' \
             f'<b>CPU Usage 🖥️:</b> {cpuUsage}%\n' \
             f'<b>RAM Usage 🚀:</b> {memory}%\n' \
-            f'<b>Disk Usage 📦:</b> {disk}%\n\n' \
+            f'<b>DISK Usage 📦:</b> {disk}%\n\n' \
             f'<b>Total Disk Space:</b> {total}\n' \
             f'<b>Used 📦:</b> {used}\n' \
             f'<b>Free 🗂:</b> {free}\n\n' \
             f'<b>📑 Data Usage 📑:</b>\n' \
             f'<b>Upload 📤:</b> {sent}\n' \
             f'<b>Download 📥:</b> {recv}'
-    update.effective_message.reply_photo("https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg", stats, parse_mode=ParseMode.HTML)
+    update.effective_message.reply_photo(IMAGE_URL, stats, parse_mode=ParseMode.HTML)
 
 
 def start(update: Update, context: CallbackContext):
@@ -63,7 +63,7 @@ This is a bot which can mirror all your links to Google drive!
 
 Type /{BotCommands.HelpCommand} to get a list of available commands
 '''
-    update.effective_message.reply_photo("https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg", start_string, parse_mode=ParseMode.MARKDOWN)
+    update.effective_message.reply_photo(IMAGE_URL, start_string, parse_mode=ParseMode.MARKDOWN)
 
 
 def chat_list(update: Update, context: CallbackContext):

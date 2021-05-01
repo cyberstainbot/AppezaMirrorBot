@@ -11,8 +11,7 @@ from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import TelegramError, Update
 from telegram.ext import run_async, CallbackContext, CommandHandler
 from telegram.utils.helpers import mention_html
-
-from pmb import dispatcher
+from pmb import dispatcher, IMAGE_URL
 
 combot_stickers_url = "https://combot.org/telegram/stickers?q="
 
@@ -442,7 +441,7 @@ def stickhelp(update, context):
 • `/remove`*:* Replay to a sticker to remove sticker from an existing pack.
 • `/stickers`*:* Find stickers for given term on combot sticker catalogue.
 '''
-    update.effective_message.reply_photo("https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg", help_string, parse_mode=ParseMode.MARKDOWN)
+    update.effective_message.reply_photo(IMAGE_URL, help_string, parse_mode=ParseMode.MARKDOWN)
 
 STICKERID_HANDLER = CommandHandler("stickerid", stickerid)
 GETSTICKER_HANDLER = CommandHandler("getsticker", getsticker)

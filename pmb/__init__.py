@@ -9,9 +9,10 @@ import telegram.ext as tg
 from dotenv import load_dotenv
 from pyrogram import Client
 from telegraph import Telegraph
-import socket
 from pmb.helper.config import dynamic
 from pmb.helper.config.load import update_dat
+
+import socket
 import faulthandler
 faulthandler.enable()
 from megasdkrestclient import MegaSdkRestClient, errors as mega_err
@@ -136,7 +137,7 @@ except KeyError:
 try:
     UPTOBOX_TOKEN = getConfig('UPTOBOX_TOKEN')
 except KeyError:
-    logging.warning('UPTOBOX_TOKEN not provided!')
+    logging.info('UPTOBOX_TOKEN not provided!')
     UPTOBOX_TOKEN = None
     
 try:
@@ -248,6 +249,12 @@ try:
 except KeyError:
     SHORTENER = None
     SHORTENER_API = None
+try:
+    IMAGE_URL = getConfig('IMAGE_URL')
+except KeyError:
+    IMAGE_URL = 'https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg'
+
+    
 
 updater = tg.Updater(token=BOT_TOKEN)
 bot = updater.bot

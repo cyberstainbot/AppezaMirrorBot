@@ -6,8 +6,7 @@ import bs4
 import requests
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from telegram.ext import run_async, CallbackContext, CommandHandler
-
-from pmb import dispatcher
+from pmb import dispatcher, IMAGE_URL
 
 def shorten(description, info = 'anilist.co'):
     msg = "" 
@@ -252,7 +251,7 @@ def weebhelp(update, context):
 • `/character`*:* search character
 • `/manga`*:* search manga
 '''
-    update.effective_message.reply_photo("https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg", help_string, parse_mode=ParseMode.MARKDOWN)
+    update.effective_message.reply_photo(IMAGE_URL, help_string, parse_mode=ParseMode.MARKDOWN)
 
 
 ANIME_HANDLER = CommandHandler("anime", anime)

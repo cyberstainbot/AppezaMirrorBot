@@ -26,7 +26,7 @@
       },
       "DOWNLOAD_DIR": {
         "description": "The path to the local folder where the downloads should be downloaded to.",
-        "value": "/home/slam/mirror-bot/downloads",
+        "value": "/home/priiiyo/mirror-bot/downloads",
         "required": false
       },
       "DOWNLOAD_STATUS_UPDATE_INTERVAL": {
@@ -120,6 +120,11 @@
         "description": "Fill your shortener api key if you are using shortener.",
         "required": false
       },
+      "IMAGE_URL": {
+        "description": "Show Image/Logo in /start message. Fill value of image your link image, use telegra.ph or any direct link image",
+        "value": "https://telegra.ph/file/db03910496f06094f1f7a.jpg",
+        "required": false
+       },
       "BUTTON_THREE_NAME": {
         "description": "Extra buttons (optional).",
         "required": false
