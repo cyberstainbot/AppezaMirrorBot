@@ -17,7 +17,7 @@ def cloneNode(update,context):
             cc = f'\n\n👤 𝗖𝗹𝗼𝗻𝗲𝗱 𝗕𝘆 : {uname}'
     if len(args) > 1:
         link = args[1]
-        msg = sendMessage(f"Cloning: <code>{link}</code>",context.bot,update)
+        msg = sendMessage(f"📚 Cloning: <code>{link}</code>",context.bot,update)
         gd = GoogleDriveHelper()
         result, button = gd.clone(link)
         deleteMessage(context.bot,msg)

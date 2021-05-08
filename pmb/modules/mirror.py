@@ -148,9 +148,9 @@ class MirrorListener(listeners.MirrorListeners):
         with download_dict_lock:
             msg = f'<b>🗂 𝗙𝗶𝗹𝗲𝗡𝗮𝗺𝗲 : </b><code>{download_dict[self.uid].name()}</code>\n<b>📦 𝐓𝐨𝐭𝐚𝐥 𝐒𝐢𝐳𝐞 : </b><code>{size}</code>\n' \
                   f' \n' \
-                  f'🔅𝙋𝙧𝙞𝙞𝙞𝙮𝙤 𝙈𝙞𝙧𝙧𝙤𝙧 𝙕𝙤𝙣𝙀\n' \
+                  f'🎴𝙋𝙧𝙞𝙞𝙞𝙮𝙤 𝙈𝙞𝙧𝙧𝙤𝙧 𝙕𝙤𝙣𝙀\n' \
                   f' \n' \
-                  f'🔅𝙂𝙧𝙤𝙪𝙥 : @PriiiyoMirror\n'
+                  f'🎴𝙂𝙧𝙤𝙪𝙥 : @PriiiyoMirror\n'
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={link}&format=text').text
@@ -256,7 +256,7 @@ def _mirror(bot, update, isTar=False, extract=False):
                     listener = MirrorListener(bot, update, pswd, isTar, tag, extract)
                     tg_downloader = TelegramDownloadHelper(listener)
                     tg_downloader.add_download(reply_to, f'{DOWNLOAD_DIR}{listener.uid}/', name)
-                    sendStatusMessage(update, bot)
+                    sendMessage(f"<b>★ Your Telegram File Has Been Added To Download Queue.\n★ Check Status By Clicking</b> /{BotCommands.StatusCommand}", bot, update)
                     if len(Interval) == 0:
                         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))
                     return
@@ -276,12 +276,13 @@ def _mirror(bot, update, isTar=False, extract=False):
     if bot_utils.is_mega_link(link) and MEGA_KEY is not None and not BLOCK_MEGA_LINKS:
         mega_dl = MegaDownloader(listener)
         mega_dl.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/')
-        sendStatusMessage(update, bot)
+        sendMessage(f"<b>★ Mega.nz Link Added To 📑 /{BotCommands.StatusCommand}\n★ Only 1 Download At A Time Otherwise Ban.\n★ Do Not Forget To Read Mega Download Rules.</b>", bot, update)
+
     elif bot_utils.is_mega_link(link) and BLOCK_MEGA_LINKS:
         sendMessage("Mega links are blocked. Dont try to mirror mega links.", bot, update)
     else:
         ariaDlManager.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener, name)
-        sendStatusMessage(update, bot)
+        sendMessage(f"<b>★ Your URL Link Has Been Added To 📑 /{BotCommands.StatusCommand}\n☆ Max Mirror Size Is <u>60GB</u> In This Group.\n★ Do Not Forget To Read Group Rules.</b>", bot, update)
     if len(Interval) == 0:
         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))
 

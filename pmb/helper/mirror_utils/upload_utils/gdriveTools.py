@@ -20,8 +20,8 @@ from telegram import InlineKeyboardMarkup
 from pmb.helper.telegram_helper import button_build
 from telegraph import Telegraph
 
-from pmb import parent_id, DOWNLOAD_DIR, IS_TEAM_DRIVE, INDEX_URL, \
-    USE_SERVICE_ACCOUNTS, download_dict, telegraph_token, BUTTON_THREE_NAME, BUTTON_THREE_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, SHORTENER, SHORTENER_API
+from pmb import parent_id, DOWNLOAD_DIR, IS_TEAM_DRIVE, INDEX_URL, USE_TELEGRAPH, \
+    USE_SERVICE_ACCOUNTS, download_dict, TELEGRAPH_TOKEN, BUTTON_THREE_NAME, BUTTON_THREE_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, SHORTENER, SHORTENER_API
 from pmb.helper.ext_utils.bot_utils import *
 from pmb.helper.ext_utils.fs_utils import get_mime_type, get_path_size
 
@@ -100,7 +100,7 @@ class GoogleDriveHelper:
                                      resumable=False)
         file_metadata = {
             'name': file_name,
-            'description': 'mirror',
+            'description': 'Priiiyo Mirror Bot',
             'mimeType': mime_type,
         }
         if parent_id is not None:
@@ -320,7 +320,7 @@ class GoogleDriveHelper:
             if meta.get("mimeType") == self.__G_DRIVE_DIR_MIME_TYPE:
                 dir_id = self.create_directory(meta.get('name'), parent_id)
                 result = self.cloneFolder(meta.get('name'), meta.get('name'), meta.get('id'), dir_id)
-                msg += f'<b>🗂 𝗙𝗶𝗹𝗲𝗡𝗮𝗺𝗲: </b><code>{meta.get("name")}</code>\n<b>Size : </b>{get_readable_file_size(self.transferred_size)}'
+                msg += f'<b>🗂 𝗙𝗶𝗹𝗲𝗡𝗮𝗺𝗲: </b><code>{meta.get("name")}</code>\n<b>Size : </b><code>{get_readable_file_size(self.transferred_size)}<code>'
                 durl = self.__G_DRIVE_DIR_BASE_DOWNLOAD_URL.format(dir_id)
                 buttons = button_build.ButtonMaker()
                 if SHORTENER is not None and SHORTENER_API is not None:
@@ -483,7 +483,7 @@ class GoogleDriveHelper:
                 if nxt_page < self.num_of_path:
                     content += f'<b> | <a href="https://telegra.ph/{self.path[nxt_page]}">Next</a></b>'
                     nxt_page += 1
-            Telegraph(access_token=telegraph_token).edit_page(path = self.path[prev_page],
+            Telegraph(access_token=TELEGRAPH_TOKEN).edit_page(path = self.path[prev_page],
                                  title = '𝗣𝗥𝗜𝗜𝗜𝗬𝗢 𝗠𝗜𝗥𝗥𝗢𝗥 𝗭𝗢𝗡𝗘',
                                  author_name='👲 𝗨𝗽𝗹𝗼𝗮𝗱 𝗕𝘆',
                                  author_url='https://t.me/PriiiyoBOTs',
@@ -530,6 +530,10 @@ class GoogleDriveHelper:
                             msg += f' <b>| <a href="{siurl}">🚀 𝐈𝐧𝐝𝐞𝐱 𝐋𝐢𝐧𝐤 🚀</a></b>'
                         else:
                             msg += f' <b>| <a href="{url}">🚀 𝐈𝐧𝐝𝐞𝐱 𝐋𝐢𝐧𝐤 🚀</a></b>'
+                elif file.get('mimeType') == 'application/vnd.google-apps.shortcut':
+                    msg += f"⁍<a href='https://drive.google.com/drive/folders/{file.get('id')}'>{file.get('name')}" \
+                        f"</a> (shortcut)"
+                    # Excluded index link as indexes cant download or open these shortcuts
                 else:
                     furl = f"https://drive.google.com/uc?id={file.get('id')}&export=download"
                     msg += f"⁍<code>{file.get('name')}<br>({get_readable_file_size(int(file.get('size')))})📄</code><br>"
@@ -560,7 +564,7 @@ class GoogleDriveHelper:
                 return "No Result Found :(", None
 
             for content in self.telegraph_content :
-                self.path.append(Telegraph(access_token=telegraph_token).create_page(
+                self.path.append(Telegraph(access_token=TELEGRAPH_TOKEN).create_page(
                                                         title='𝗣𝗥𝗜𝗜𝗜𝗬𝗢 𝗠𝗜𝗥𝗥𝗢𝗥 𝗭𝗢𝗡𝗘',
                                                         author_name='👲 𝗨𝗽𝗹𝗼𝗮𝗱 𝗕𝘆',
                                                         author_url='https://t.me/PriiiyoBOTs',
@@ -571,9 +575,9 @@ class GoogleDriveHelper:
             if self.num_of_path > 1:
                 self.edit_telegraph()
 
-            msg = f"<b>Search Results For {fileName} 👇</b>"
+            msg = f"<b>🔎 Search Results For <i>{fileName}</i></b> \n<b>📚 Found {len(response['files'])} results</b>"
             buttons = button_build.ButtonMaker()   
-            buttons.buildbutton("🔎 HERE 🔎", f"https://telegra.ph/{self.path[0]}")
+            buttons.buildbutton("🔎 Click HERE 🔎", f"https://telegra.ph/{self.path[0]}")
 
             return msg, InlineKeyboardMarkup(buttons.build_menu(1))
 

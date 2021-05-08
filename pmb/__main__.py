@@ -9,7 +9,7 @@ from sys import executable
 from datetime import datetime
 import pytz
 import time
-from telegram import ParseMode
+from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
 from pmb import bot, dispatcher, updater, botStartTime, AUTHORIZED_CHATS, IMAGE_URL
@@ -22,7 +22,7 @@ from .helper.config import editor
 from .helper.config.subproc import killAll
 from .helper.config import sync
 from .helper.config.dynamic import configList, DYNAMIC_CONFIG
-from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, anime, stickers, search, delete, speedtest, usage
+from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, anime, stickers, search, delete, speedtest, usage, mediainfo 
 
 from pyrogram import idle
 from pmb import app
@@ -41,17 +41,21 @@ def stats(update: Update, context: CallbackContext):
     cpuUsage = psutil.cpu_percent(interval=0.5)
     memory = psutil.virtual_memory().percent
     disk = psutil.disk_usage('/').percent
-    stats = f'<b>Bot UpTime ⏲:</b> {currentTime}\n\n' \
-            f'<b>Start Time 🔊:</b> {current}\n' \
-            f'<b>CPU Usage 🖥️:</b> {cpuUsage}%\n' \
-            f'<b>RAM Usage 🚀:</b> {memory}%\n' \
-            f'<b>DISK Usage 📦:</b> {disk}%\n\n' \
-            f'<b>Total Disk Space:</b> {total}\n' \
-            f'<b>Used 📦:</b> {used}\n' \
-            f'<b>Free 🗂:</b> {free}\n\n' \
-            f'<b>📑 Data Usage 📑:</b>\n' \
-            f'<b>Upload 📤:</b> {sent}\n' \
-            f'<b>Download 📥:</b> {recv}'
+    stats = f'<b>╭─────────「  ⭕️ BOT STATISTICS ⭕️ 」 </b>\n' \
+            f'<b>│</b>\n' \
+            f'<b>├  ⏰ Bot Uptime : {currentTime}</b>\n' \
+            f'<b>├  🔊 Start Time :</b> {current}\n' \
+            f'<b>├  🗄 Total Disk Space : {total}</b>\n' \
+            f'<b>├  🗂 Total Used Space : {used}</b>\n' \
+            f'<b>├  📂 Total Free Space : {free}</b>\n' \
+            f'<b>├  📑 Data Usage 📑:</b>\n' \
+            f'<b>├  📤 Total Upload : {sent}</b>\n' \
+            f'<b>├  📥 Total Download : {recv}</b>\n' \
+            f'<b>├  🖥️ CPU : {cpuUsage}%</b>\n' \
+            f'<b>├  🚀 RAM : {memory}%</b>\n' \
+            f'<b>├  🗄 DISK : {disk}%</b>\n' \
+            f'<b>│</b>\n' \
+            f'<b>╰──「 🚸 @PriiiyoBOTs 🚸 」</b>'
     update.effective_message.reply_photo(IMAGE_URL, stats, parse_mode=ParseMode.HTML)
 
 
@@ -73,9 +77,11 @@ def chat_list(update: Update, context: CallbackContext):
 
 
 def repo(update: Update, context: CallbackContext):
-    bot.send_message(update.message.chat_id,
-    reply_to_message_id=update.message.message_id,
-    text="Repo: https://github.com/priiiyo/priiiyo-mirror-bot\nGroup: https://t.me/PriiiyoMirror", disable_web_page_preview=True)
+    button = [
+    [InlineKeyboardButton("Repo", url=f"https://github.com/priiiyo/priiiyo-mirror-bot")],
+    [InlineKeyboardButton("Support Group", url=f"https://t.me/PriiiyoMirror")]]
+    reply_markup = InlineKeyboardMarkup(button)
+    update.effective_message.reply_photo(IMAGE_URL, reply_markup=reply_markup)
 
 
 def restart(update, context):

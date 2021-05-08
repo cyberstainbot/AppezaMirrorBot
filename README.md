@@ -74,8 +74,8 @@ Deploying is pretty much straight forward and is divided into several steps as f
 
 - Clone this repo:
 ```
-git clone https://github.com/priiiyo/priiiyo-mirror-bot mirrorbot/
-cd mirrorbot
+git clone https://github.com/priiiyo/priiiyo-mirror-bot
+cd priiiyo-mirror-bot
 ```
 
 - Install requirements
@@ -101,6 +101,7 @@ cp config_sample.env config.env
 _____REMOVE_THIS_LINE_____=True
 ```
 Fill up rest of the fields. Meaning of each fields are discussed below:
+
 - **BOT_TOKEN**: The telegram bot token that you get from [@BotFather](https://t.me/BotFather)
 - **GDRIVE_FOLDER_ID**: This is the folder ID of the Google Drive Folder to which you want to upload all the mirrors.
 - **DOWNLOAD_DIR**: The path to the local folder where the downloads should be downloaded to
@@ -155,17 +156,21 @@ python3 generate_drive_token.py
 
 ## Deploying
 
+- Install Requirements:
+```
+pip3 install -r requirements.txt
+```
 - Start docker daemon (skip if already running):
 ```
 sudo dockerd
 ```
 - Build Docker image:
 ```
-sudo docker build . -t mirrorbot
+sudo docker build . -t priiiyo-mirror-bot
 ```
 - Run the image:
 ```
-sudo docker run mirrorbot
+sudo docker run priiiyo-mirror-bot
 ```
 
 ## Deploying on Heroku
@@ -180,6 +185,15 @@ Fork this repo then upload **token.pickle** to your forks
     <summary><b>Click here for more details</b></summary>
 
 - Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli)
+
+## Creating a Heroku App
+
+- Create a [free Heroku Account](https://id.heroku.com/signup/login).
+
+- Install Heroku CLI:
+```
+sudo snap install --classic heroku
+```
 - Login into your heroku account with command:
 ```
 heroku login
@@ -209,6 +223,9 @@ git commit -m "Added Creds."
 git push heroku master --force
 ```
 - Restart Worker by these commands,You can Do it manually too in heroku.
+
+# Using CLI
+
 - For Turning off the Bot:
 ```
 heroku ps:scale worker=0 -a appname
@@ -216,6 +233,14 @@ heroku ps:scale worker=0 -a appname
 - For Turning on the Bot:
 ```
 heroku ps:scale worker=1 -a appname		
+```
+- To Check Status:
+```
+heroku ps --app your-mirror-bot
+```
+- To Tail App Logs:
+```
+heroku logs --tail --app your-mirror-bot
 ```
 
 </details>
@@ -289,11 +314,12 @@ where host is the name of extractor (eg. youtube, twitch). Multiple accounts of 
 # Credits
 
 Thanks to:
+- [priiiyo(me)](https://github.com/priiiyo) For custom Mod 😛
 - [out386](https://github.com/out386) heavily inspired from telegram bot which is written in JS
-- [Izzy12](https://github.com/lzzy12/) for original repo
-- [magneto261290](https://github.com/magneto261290/) for some features
-- [ksssomesh12](https://github.com/ksssomesh12/tg-mirror-bot) for some special features
-- [SVR666](https://github.com/SVR666/) for some features & fixes
-- [Breakdowns](https://github.com/breakdowns/slam-mirrorbot) for some cool modules
+- [Izzy12](https://github.com/lzzy12) for original repo
+- [magneto261290](https://github.com/magneto261290) for some features
+- [ksssomesh12](https://github.com/ksssomesh12) for some special features
+- [SVR666](https://github.com/SVR666) for some features & fixes
+- [Breakdowns](https://github.com/breakdowns) for some cool modules
 
 and many more people who aren't mentioned here, but may be found in [Contributors](https://github.com/priiiyo/priiiyo-mirror-bot/graphs/contributors).

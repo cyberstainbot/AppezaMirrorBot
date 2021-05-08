@@ -1,10 +1,11 @@
-from telegram import InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import CallbackQueryHandler
 from telegram.message import Message
 from telegram.update import Update
 import time
 import psutil
 import shutil
-from pmb import AUTO_DELETE_MESSAGE_DURATION, LOGGER, bot, \
+from pmb import dispatcher, AUTO_DELETE_MESSAGE_DURATION, LOGGER, bot, \
     status_reply_dict, status_reply_dict_lock, download_dict, download_dict_lock
 from pmb.helper.ext_utils.bot_utils import get_readable_message, get_readable_file_size, MirrorStatus
 from telegram.error import TimedOut, BadRequest
@@ -77,8 +78,8 @@ def update_all_messages():
     used = get_readable_file_size(used)
     free = get_readable_file_size(free)
     msg = get_readable_message()
-    msg += f"<b>🖥️ CPU:</b> {psutil.cpu_percent()}%" \
-           f"<b>🚀 RAM:</b> {psutil.virtual_memory().percent}%" \
+    msg += f" <b>🖥️ CPU:</b> {psutil.cpu_percent()}%" \
+           f" <b>🚀 RAM:</b> {psutil.virtual_memory().percent}%" \
            f"<b>📦 DISK:</b> {psutil.disk_usage('/').percent}%"
     with download_dict_lock:
         dlspeed_bytes = 0
@@ -104,10 +105,27 @@ def update_all_messages():
                 if len(msg) == 0:
                     msg = "Starting DL"
                 try:
-                    editMessage(msg, status_reply_dict[chat_id])
+                    keyboard = [[InlineKeyboardButton("🔄 REFRESH 🔄", callback_data=str(ONE)),
+                                 InlineKeyboardButton("❌ CLOSE ❌", callback_data=str(TWO)),]]
+                    editMessage(msg, status_reply_dict[chat_id], reply_markup=InlineKeyboardMarkup(keyboard))
                 except Exception as e:
                     LOGGER.error(str(e))
                 status_reply_dict[chat_id].text = msg
+                
+                
+ONE, TWO = range(2)
+
+def refresh(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="Refreshing...")
+    time.sleep(2)
+    update_all_messages()
+
+def close(update, context):
+    query = update.callback_query
+    query.answer()
+    delete_all_messages()
 
 
 def sendStatusMessage(msg, bot):
@@ -115,9 +133,9 @@ def sendStatusMessage(msg, bot):
     used = get_readable_file_size(used)
     free = get_readable_file_size(free)
     progress = get_readable_message()
-    progress += f"<b>🖥 CPU:</b> {psutil.cpu_percent()}%\n" \
-           f"<b>🚀 RAM:</b> {psutil.virtual_memory().percent}%\n" \
-           f"<b>📦 DISK:</b> {psutil.disk_usage('/').percent}%\n"
+    progress += f" <b>🖥 CPU:</b> {psutil.cpu_percent()}%\n" \
+           f" <b>🚀 RAM:</b> {psutil.virtual_memory().percent}%\n" \
+           f" <b>📦 DISK:</b> {psutil.disk_usage('/').percent}%\n"
     with download_dict_lock:
         dlspeed_bytes = 0
         uldl_bytes = 0
@@ -147,3 +165,6 @@ def sendStatusMessage(msg, bot):
                 del status_reply_dict[msg.message.chat.id]
         message = sendMessage(progress, bot, msg)
         status_reply_dict[msg.message.chat.id] = message
+        
+dispatcher.add_handler(CallbackQueryHandler(refresh, pattern='^' + str(ONE) + '$'))
+dispatcher.add_handler(CallbackQueryHandler(close, pattern='^' + str(TWO) + '$'))         

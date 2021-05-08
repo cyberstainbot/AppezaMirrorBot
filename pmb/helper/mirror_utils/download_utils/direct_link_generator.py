@@ -46,6 +46,7 @@ def direct_link_generator(link: str):
         return racaty(link)
     else:
         raise DirectDownloadLinkException(f'No Direct link function found for {link}')
+        
 
 def zippy_share(url: str) -> str:
     link = re.findall("https:/.(.*?).zippyshare", url)[0]
@@ -105,6 +106,7 @@ def cm_ru(url: str) -> str:
         raise DirectDownloadLinkException("`Error: Can't extract the link`\n")
     dl_url = data['download']
     return dl_url
+    
 
 def uptobox(url: str) -> str:
     """ Uptobox direct links generator
