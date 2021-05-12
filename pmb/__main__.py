@@ -9,7 +9,7 @@ from sys import executable
 from datetime import datetime
 import pytz
 import time
-from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram import ParseMode, BotCommand, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
 from pmb import bot, dispatcher, updater, botStartTime, AUTHORIZED_CHATS, IMAGE_URL
@@ -74,17 +74,25 @@ def chat_list(update: Update, context: CallbackContext):
     chatlist =''
     chatlist += '\n'.join(str(id) for id in AUTHORIZED_CHATS)
     sendMessage(f'<b>Authorized List:</b>\n{chatlist}\n', context.bot, update)
-
-
-def repo(update: Update, context: CallbackContext):
+    
+    
+def owner(update: Update, context: CallbackContext):
     button = [
-    [InlineKeyboardButton("Repo", url=f"https://github.com/priiiyo/priiiyo-mirror-bot")],
-    [InlineKeyboardButton("Support Group", url=f"https://t.me/PriiiyoMirror")]]
+    [InlineKeyboardButton("👤 Owner 👤", url=f"https://t.me/smpriiiyo")],
+    [InlineKeyboardButton("🔰 Mirror Group 🔰", url=f"https://t.me/PriiiyoMirror")]]
     reply_markup = InlineKeyboardMarkup(button)
     update.effective_message.reply_photo(IMAGE_URL, reply_markup=reply_markup)
 
 
-def restart(update, context):
+def repo(update: Update, context: CallbackContext):
+    button = [
+    [InlineKeyboardButton("⚠️ Repo ⚠️", url=f"https://github.com/smpriiiyo/priiiyo-mirror-bot")],
+    [InlineKeyboardButton("🔰 Support Group 🔰", url=f"https://t.me/PriiiyoBOTs_Support")]]
+    reply_markup = InlineKeyboardMarkup(button)
+    update.effective_message.reply_photo(IMAGE_URL, reply_markup=reply_markup)
+
+
+def restart(update: Update, context: CallbackContext):
     restart_message = sendMessage("Restarting, Please wait!", context.bot, update)
     # Save restart message ID and chat ID in order to edit it after restarting
     with open(".restartmsg", "w") as f:
@@ -139,6 +147,8 @@ def bot_help(update: Update, context: CallbackContext):
 
 /{BotCommands.SpeedCommand}: Check Internet Speed of the Host
 
+/{BotCommands.OwnerCommand}: Check Who is My master.
+
 /{BotCommands.RepoCommand}: Get the bot repo.
 
 /tshelp: Get help for torrent search module.
@@ -150,6 +160,29 @@ def bot_help(update: Update, context: CallbackContext):
     sendMessage(help_string, context.bot, update)
 
 
+botcmds = [BotCommand(f'{BotCommands.MirrorCommand}', 'Start Mirroring'),
+BotCommand(f'{BotCommands.TarMirrorCommand}','Upload tar (zipped) file'),
+BotCommand(f'{BotCommands.UnzipMirrorCommand}','Extract files'),
+BotCommand(f'{BotCommands.CloneCommand}','copy file/folder to drive'),
+BotCommand(f'{BotCommands.WatchCommand}','mirror YT-DL support link'),
+BotCommand(f'{BotCommands.TarWatchCommand}','mirror youtube link as tar'),
+BotCommand(f'{BotCommands.CancelMirror}','Cancel a task'),
+BotCommand(f'{BotCommands.CancelAllCommand}','Cancel All Tasks'),
+BotCommand(f'{BotCommands.DeleteCommand}','Delete file from Drive'),
+BotCommand(f'{BotCommands.ListCommand}',' [query] searches files in G-Drive'),
+BotCommand(f'{BotCommands.AuthListCommand}','See Authorized list (Can only be invoked by owner of the bot)'),
+BotCommand(f'{BotCommands.StatusCommand}','Get Mirror Status message'),
+BotCommand(f'{BotCommands.StatsCommand}','Show Stats of the machine the bot is hosted on'),
+BotCommand(f'{BotCommands.HelpCommand}','Get Detailed Help'),
+BotCommand(f'{BotCommands.SpeedCommand}','Check Speed of the host'),
+BotCommand(f'{BotCommands.LogCommand}','Bot Log [owner only]'),
+BotCommand(f'{BotCommands.UsageCommand}','To see Heroku Dyno Stats (Owner only)'),
+BotCommand(f'{BotCommands.RepoCommand}','Get the bot repo'),
+BotCommand(f'{BotCommands.OwnerCommand}','Check Who is My master'),
+BotCommand(f'{BotCommands.SpeedCommand}','Check Internet Speed of the Host'),
+BotCommand(f'{BotCommands.RestartCommand}','restart bot [owner only]')]
+
+
 def main():
     fs_utils.start_cleanup()
     # Check if the bot is restarting
@@ -158,6 +191,7 @@ def main():
             chat_id, msg_id = map(int, f)
         bot.edit_message_text("Restarted successfully!", chat_id, msg_id)
         os.remove(".restartmsg")
+    bot.set_my_commands(botcmds)
         
     start_handler = CommandHandler(BotCommands.StartCommand, start,
                                    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
@@ -171,6 +205,8 @@ def main():
                                    stats, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
     log_handler = CommandHandler(BotCommands.LogCommand, log, filters=CustomFilters.owner_filter, run_async=True)
     repo_handler = CommandHandler(BotCommands.RepoCommand, repo,
+                                  filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
+    owner_handler = CommandHandler(BotCommands.OwnerCommand, owner,
                                    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
     authlist_handler = CommandHandler(BotCommands.AuthListCommand, chat_list, filters=CustomFilters.owner_filter, run_async=True)
     config_handler = editor.handler
@@ -181,6 +217,7 @@ def main():
     dispatcher.add_handler(stats_handler)
     dispatcher.add_handler(log_handler)
     dispatcher.add_handler(repo_handler)
+    dispatcher.add_handler(owner_handler)
     dispatcher.add_handler(authlist_handler)
     dispatcher.add_handler(config_handler)
     updater.start_polling()

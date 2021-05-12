@@ -23,6 +23,7 @@ class _BotCommands:
         self.DeleteCommand = 'del'
         self.UsageCommand = 'usage'
         self.RepoCommand = 'repo'
+        self.OwnerCommand = 'owner'
         self.ConfigCommand = 'config'
 
 BotCommands = _BotCommands()
