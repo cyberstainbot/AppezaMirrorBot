@@ -11,6 +11,8 @@ from pyrogram import Client
 from telegraph import Telegraph
 from pmb.helper.config import dynamic
 from pmb.helper.config.load import update_dat
+import psycopg2
+from psycopg2 import Error
 
 import socket
 import faulthandler
@@ -20,13 +22,16 @@ import subprocess
 
 socket.setdefaulttimeout(600)
 
+def getConfig(name: str):
+    return os.environ[name]
+
 botStartTime = time.time()
-if os.path.exists('log.txt'):
-    with open('log.txt', 'r+') as f:
+if os.path.exists('priiiiyo-mirror-bot.txt'):
+    with open('priiiiyo-mirror-bot.txt', 'r+') as f:
         f.truncate(0)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[logging.FileHandler('log.txt'), logging.StreamHandler()],
+                    handlers=[logging.FileHandler('priiiiyo-mirror-bot.txt'), logging.StreamHandler()],
                     level=logging.INFO)
 
 dynamic.handler()
@@ -34,10 +39,6 @@ dynamic.handler()
 load_dotenv('config.env')
 
 Interval = []
-
-
-def getConfig(name: str):
-    return os.environ[name]
 
 
 LOGGER = logging.getLogger(__name__)
@@ -48,6 +49,18 @@ try:
         exit()
 except KeyError:
     pass
+    
+def mktable():
+    try:
+        conn = psycopg2.connect(DB_URI)
+        cur = conn.cursor()
+        sql = "CREATE TABLE users (uid bigint, sudo boolean DEFAULT FALSE);"
+        cur.execute(sql)
+        conn.commit()
+        LOGGER.info("Table Created!")
+    except Error as e:
+        LOGGER.error(e)
+        exit(1)
 
 aria2 = aria2p.API(
     aria2p.Client(
@@ -72,12 +85,7 @@ status_reply_dict = {}
 download_dict = {}
 # Stores list of users and chats the bot is authorized to use in
 AUTHORIZED_CHATS = set()
-if os.path.exists('authorized_chats.txt'):
-    with open('authorized_chats.txt', 'r+') as f:
-        lines = f.readlines()
-        for line in lines:
-            #    LOGGER.info(line.split())
-            AUTHORIZED_CHATS.add(int(line.split()[0]))
+SUDO_USERS = set()
 try:
     achats = getConfig('AUTHORIZED_CHATS')
     achats = achats.split(" ")
@@ -88,6 +96,7 @@ except:
 
 try:
     BOT_TOKEN = getConfig('BOT_TOKEN')
+    DB_URI = getConfig('DATABASE_URL')
     parent_id = getConfig('GDRIVE_FOLDER_ID')
     DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
     if not DOWNLOAD_DIR.endswith("/"):
@@ -100,6 +109,26 @@ try:
 except KeyError as e:
     LOGGER.error("One or more env variables missing! Exiting now")
     exit(1)
+
+try:
+    conn = psycopg2.connect(DB_URI)
+    cur = conn.cursor()
+    sql = "SELECT * from users;"
+    cur.execute(sql)
+    rows = cur.fetchall()  #returns a list ==> (uid, sudo)
+    for row in rows:
+        AUTHORIZED_CHATS.add(row[0])
+        if row[1]:
+            SUDO_USERS.add(row[0])
+except Error as e:
+    if 'relation "users" does not exist' in str(e):
+        mktable()
+    else:
+        LOGGER.error(e)
+        exit(1)
+finally:
+    cur.close()
+    conn.close()
 
 #Generate User String
 LOGGER.info("Generating USER_SESSION_STRING")
@@ -257,6 +286,6 @@ except KeyError:
 
     
 
-updater = tg.Updater(token=BOT_TOKEN)
+updater = tg.Updater(token=BOT_TOKEN, use_context=True)
 bot = updater.bot
 dispatcher = updater.dispatcher

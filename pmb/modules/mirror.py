@@ -59,7 +59,9 @@ class MirrorListener(listeners.MirrorListeners):
             download = download_dict[self.uid]
             name = download.name()
             size = download.size_raw()
-            m_path = f'{DOWNLOAD_DIR}{self.uid}/{download.name()}'
+            if name is None: # when pyrogram's media.file_name is of NoneType
+                name = os.listdir(f'{DOWNLOAD_DIR}{self.uid}')[0]
+            m_path = f'{DOWNLOAD_DIR}{self.uid}/{name}'
         if self.isTar:
             download.is_archiving = True
             try:
@@ -150,7 +152,7 @@ class MirrorListener(listeners.MirrorListeners):
                   f' \n' \
                   f'🔥 𝙋𝙧𝙞𝙞𝙞𝙮𝙤 𝙈𝙞𝙧𝙧𝙤𝙧 𝙕𝙤𝙣𝙀\n' \
                   f' \n' \
-                  f'🔥 𝙂𝙧𝙤𝙪𝙥 : @PriiiyoMirror\n'
+                  f'🔥 𝙂𝙧𝙤𝙪𝙥 : @PriiiiyoMirror\n'
             buttons = button_build.ButtonMaker()
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={link}&format=text').text
@@ -179,7 +181,7 @@ class MirrorListener(listeners.MirrorListeners):
             else:
                 uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
             if uname is not None:
-                msg += f'\n\n<b>👤 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗿 : 👉</b> {uname}\n\n▫️#Uploaded To Team Drive ✓ \n\n🚫 𝘿𝙤 𝙉𝙤𝙩 𝙎𝙝𝙖𝙧𝙚 𝙄𝙣𝙙𝙚𝙭 𝙇𝙞𝙣𝙠 \n\n✅ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 : <b>@PriiiyoBOTs</b>'
+                msg += f'\n\n<b>👤 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗿 : 👉 </b> {uname}\n\n▫️#Uploaded To Team Drive ✓ \n\n🚫 𝘿𝙤 𝙉𝙤𝙩 𝙎𝙝𝙖𝙧𝙚 𝙄𝙣𝙙𝙚𝙭 𝙇𝙞𝙣𝙠 \n\n✅ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 : <b>@PriiiiyoBOTs</b>'
             try:
                 fs_utils.clean_download(download_dict[self.uid].path())
             except FileNotFoundError:
@@ -256,7 +258,7 @@ def _mirror(bot, update, isTar=False, extract=False):
                     listener = MirrorListener(bot, update, pswd, isTar, tag, extract)
                     tg_downloader = TelegramDownloadHelper(listener)
                     tg_downloader.add_download(reply_to, f'{DOWNLOAD_DIR}{listener.uid}/', name)
-                    sendMessage(f"<b>★ Your Telegram File Has Been Added To Download Queue.\n★ Check Status By Clicking</b> /{BotCommands.StatusCommand}", bot, update)
+                    sendMessage(f"<b>★ Your Telegram File Has Been Added To Download Queue.\★ Check /{BotCommands.StatusCommand} By Clicking To See Progress</b>", bot, update)
                     if len(Interval) == 0:
                         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))
                     return
@@ -282,7 +284,7 @@ def _mirror(bot, update, isTar=False, extract=False):
         sendMessage("Mega links are blocked. Dont try to mirror mega links.", bot, update)
     else:
         ariaDlManager.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener, name)
-        sendMessage(f"<b>★ Your URL Link Has Been Added To 📑 /{BotCommands.StatusCommand}\n☆ Max Mirror Size Is <u>60GB</u> In This Group.\n★ Do Not Forget To Read Group Rules.</b>", bot, update)
+        sendMessage(f"<b>★ Your URL Link Has Been Added To 📑 /{BotCommands.StatusCommand}\n★ Max Mirror Size Is <u>60GB</u> In This Group.\n★ Do Not Forget To Read Group Rules.</b>", bot, update)
     if len(Interval) == 0:
         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))
 

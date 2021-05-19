@@ -73,6 +73,6 @@ def usage(update, context):
 
 
 usage_handler = CommandHandler(command=BotCommands.UsageCommand, callback=usage,
-                                    filters=CustomFilters.owner_filter, run_async=True)
+                                    filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
                                     
 dispatcher.add_handler(usage_handler)

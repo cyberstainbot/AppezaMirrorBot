@@ -1,15 +1,15 @@
 {
-    "name": "priiiyo-mirror-bot ",
-    "description": "A Telegram bot which can mirror all your links to Google drive!",
+    "name": "priiiiyo-mirror-bot ",
+    "description": "A Telegram Bot which can mirror all your links to Google drive!",
     "logo": "https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg",
     "keywords": [
       "bot",
       "telegram",
       "python"
     ],
-    "repository": "https://github.com/priiiyo/priiiyo-mirror-bot",
-    "website": "https://t.me/PriiiyoMirror",
-    "success_url": "https://github.com/priiiyo/priiiyo-mirror-bot/blob/master/README.md",
+    "repository": "https://github.com/priiiiyo/priiiiyo-mirror-bot",
+    "website": "https://t.me/PriiiiyoMirror",
+    "success_url": "https://github.com/priiiiyo/priiiiyo-mirror-bot/blob/master/README.md",
     "stack": "container",
     "env": {
       "ENV": {
@@ -149,5 +149,10 @@
         "description": "Fill your URL if you are using extra buttons.",
         "required": false
       }
-    }
+    },
+    "addons": [
+      {
+        "plan": "heroku-postgresql"
+      }
+    ]
 }
