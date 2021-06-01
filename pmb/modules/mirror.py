@@ -150,26 +150,25 @@ class MirrorListener(listeners.MirrorListeners):
         with download_dict_lock:
             msg = f'<b>🗂 𝗙𝗶𝗹𝗲𝗡𝗮𝗺𝗲 : </b><code>{download_dict[self.uid].name()}</code>\n<b>📦 𝐓𝐨𝐭𝐚𝐥 𝐒𝐢𝐳𝐞 : </b><code>{size}</code>\n' \
                   f' \n' \
-                  f'🔥 𝙋𝙧𝙞𝙞𝙞𝙮𝙤 𝙈𝙞𝙧𝙧𝙤𝙧 𝙕𝙤𝙣𝙀\n' \
+                  f'🔥 𝗣𝗿𝗶𝗶𝗶𝗶𝘆𝗼 𝗠𝗶𝗿𝗿𝗼𝗿 𝗭𝗼𝗻𝗘\n' \
                   f' \n' \
-                  f'🔥 𝙂𝙧𝙤𝙪𝙥 : @PriiiiyoMirror\n'
+                  f'🔥 𝗚𝗿𝗼𝘂𝗽 : @PriiiiyoMirror\n'
             buttons = button_build.ButtonMaker()
+        if os.path.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
             if SHORTENER is not None and SHORTENER_API is not None:
                 surl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={link}&format=text').text
-                buttons.buildbutton("🗂 𝐃𝐫𝐢𝐯𝐞 𝐋𝐢𝐧𝐤 🗂", surl)
+                buttons.buildbutton("☁️ ᴅʀɪᴠᴇ ʟɪɴᴋ ☁️", surl)
             else:
-                buttons.buildbutton("🗂 𝐃𝐫𝐢𝐯𝐞 𝐋𝐢𝐧𝐤 🗂", link)
+                buttons.buildbutton("☁️ ᴅʀɪᴠᴇ ʟɪɴᴋ ☁️", link)
             LOGGER.info(f'Done Uploading {download_dict[self.uid].name()}')
             if INDEX_URL is not None:
                 url_path = requests.utils.quote(f'{download_dict[self.uid].name()}')
-                share_url = f'{INDEX_URL}/{url_path}'
-                if os.path.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
-                    share_url += '/'
+                share_url = f'{INDEX_URL}/{url_path}/'
                 if SHORTENER is not None and SHORTENER_API is not None:
                     siurl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_url}&format=text').text
-                    buttons.buildbutton("🚀 𝐈𝐧𝐝𝐞𝐱 𝐋𝐢𝐧𝐤 🚀", siurl)
+                    buttons.buildbutton("🚀 ɪɴᴅᴇx ʟɪɴᴋ 🚀", siurl)
                 else:
-                    buttons.buildbutton("🚀 𝐈𝐧𝐝𝐞𝐱 𝐋𝐢𝐧𝐤 🚀", share_url)
+                    buttons.buildbutton("🚀 ɪɴᴅᴇx ʟɪɴᴋ 🚀", share_url)
             if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
                 buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
@@ -181,19 +180,62 @@ class MirrorListener(listeners.MirrorListeners):
             else:
                 uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
             if uname is not None:
-                msg += f'\n\n<b>👤 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗿 : 👉 </b> {uname}\n\n▫️#Uploaded To Team Drive ✓ \n\n🚫 𝘿𝙤 𝙉𝙤𝙩 𝙎𝙝𝙖𝙧𝙚 𝙄𝙣𝙙𝙚𝙭 𝙇𝙞𝙣𝙠 \n\n✅ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 : <b>@PriiiiyoBOTs</b>'
-            try:
-                fs_utils.clean_download(download_dict[self.uid].path())
-            except FileNotFoundError:
-                pass
-            del download_dict[self.uid]
-            count = len(download_dict)
-        sendMarkup(msg, self.bot, self.update, InlineKeyboardMarkup(buttons.build_menu(2)))
-        if count == 0:
-            self.clean()
+                msg += f'\n\n<b>👤 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗿 : </b> {uname}\n\n▫️#Uploaded To Team Drive ✓ \n\n🚫 𝗗𝗼 𝗡𝗼𝘁 𝗦𝗵𝗮𝗿𝗲 𝗜𝗻𝗱𝗲𝘅 𝗟𝗶𝗻𝗸 \n\n✅ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 : <b>@PriiiiyoBOTs</b>'
+                try:
+                    fs_utils.clean_download(download_dict[self.uid].path())
+                except FileNotFoundError:
+                    pass
+                del download_dict[self.uid]
+                count = len(download_dict)
+            sendMarkup(msg, self.bot, self.update, InlineKeyboardMarkup(buttons.build_menu(2)))
+            if count == 0:
+                self.clean()
+            else:
+                update_all_messages()
         else:
-            update_all_messages()
+            if SHORTENER is not None and SHORTENER_API is not None:
+                surl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={link}&format=text').text
+                buttons.buildbutton("☁️ ᴅʀɪᴠᴇ ʟɪɴᴋ ☁️", surl)
+            else:
+                buttons.buildbutton("☁️ ᴅʀɪᴠᴇ ʟɪɴᴋ ☁️", link)
+            LOGGER.info(f'Done Uploading {download_dict[self.uid].name()}')
+            if INDEX_URL is not None:
+                url_path = requests.utils.quote(f'{download_dict[self.uid].name()}')
+                share_url = f'{INDEX_URL}/{url_path}'
+                share_urls = f'{INDEX_URL}/{url_path}?a=view'
+                if SHORTENER is not None and SHORTENER_API is not None:
+                    siurl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_url}&format=text').text
+                    siurls = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_urls}&format=text').text
+                    buttons.buildbutton("🚀 ɪɴᴅᴇx ʟɪɴᴋ 🚀", siurl)
+                    buttons.buildbutton("📖 ᴠɪᴇᴡ ʟɪɴᴋ 📖", siurls)
+                else:
+                    buttons.buildbutton("🚀 ɪɴᴅᴇx ʟɪɴᴋ 🚀", share_url)
+                    buttons.buildbutton("📖 ᴠɪᴇᴡ ʟɪɴᴋ 📖", share_urls)
+            if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
+                buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")
+            if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
+                buttons.buildbutton(f"{BUTTON_FOUR_NAME}", f"{BUTTON_FOUR_URL}")
+            if BUTTON_FIVE_NAME is not None and BUTTON_FIVE_URL is not None:
+                buttons.buildbutton(f"{BUTTON_FIVE_NAME}", f"{BUTTON_FIVE_URL}")
+            if self.message.from_user.username:
+                uname = f"@{self.message.from_user.username}"
+            else:
+                uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
+            if uname is not None:
+                msg += f'\n\n<b>👤 𝗨𝗽𝗹𝗼𝗮𝗱𝗲𝗿 : </b> {uname}\n\n▫️#Uploaded To Team Drive ✓ \n\n🚫 𝗗𝗼 𝗡𝗼𝘁 𝗦𝗵𝗮𝗿𝗲 𝗜𝗻𝗱𝗲𝘅 𝗟𝗶𝗻𝗸 \n\n✅ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 : <b>@PriiiiyoBOTs</b>'
+                try:
+                   fs_utils.clean_download(download_dict[self.uid].path())
+                except FileNotFoundError:
+                    pass
+                del download_dict[self.uid]
+                count = len(download_dict)
+            sendMarkup(msg, self.bot, self.update, InlineKeyboardMarkup(buttons.build_menu(2)))
+            if count == 0:
+                self.clean()
+            else:
+                update_all_messages()
 
+    
     def onUploadError(self, error):
         e_str = error.replace('<', '').replace('>', '')
         with download_dict_lock:
@@ -258,7 +300,7 @@ def _mirror(bot, update, isTar=False, extract=False):
                     listener = MirrorListener(bot, update, pswd, isTar, tag, extract)
                     tg_downloader = TelegramDownloadHelper(listener)
                     tg_downloader.add_download(reply_to, f'{DOWNLOAD_DIR}{listener.uid}/', name)
-                    sendMessage(f"<b>★ Your Telegram File Has Been Added To Download Queue.\★ Check /{BotCommands.StatusCommand} By Clicking To See Progress</b>", bot, update)
+                    sendMessage(f"<b>📥 Your Telegram File Has Been Added To Download Queue.\n\n‼️ Do Not Forget To Read Group Rules.\n\n ✅ Check Progress : /{BotCommands.StatusCommand}</b>", bot, update)
                     if len(Interval) == 0:
                         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))
                     return
@@ -278,13 +320,13 @@ def _mirror(bot, update, isTar=False, extract=False):
     if bot_utils.is_mega_link(link) and MEGA_KEY is not None and not BLOCK_MEGA_LINKS:
         mega_dl = MegaDownloader(listener)
         mega_dl.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/')
-        sendMessage(f"<b>★ Mega.nz Link Added To 📑 /{BotCommands.StatusCommand}\n★ Only 1 Download At A Time Otherwise Ban.\n★ Do Not Forget To Read Mega Download Rules.</b>", bot, update)
+        sendMessage(f"<b>📥 Mega.nz Link Has Been Added To Download Queue\n\n⛔ Only 1 Download At A Time Otherwise Ban.\n\n‼️ Do Not Forget To Read Mega Download Rules.\n\n✅ Check Progress : /{BotCommands.StatusCommand}</b>", bot, update)
 
     elif bot_utils.is_mega_link(link) and BLOCK_MEGA_LINKS:
         sendMessage("Mega links are blocked. Dont try to mirror mega links.", bot, update)
     else:
         ariaDlManager.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener, name)
-        sendMessage(f"<b>★ Your URL Link Has Been Added To 📑 /{BotCommands.StatusCommand}\n★ Max Mirror Size Is <u>60GB</u> In This Group.\n★ Do Not Forget To Read Group Rules.</b>", bot, update)
+        sendMessage(f"<b>📥 Your URL Link Has Been Added To Download Queue.\n\nⓂ️ Max Mirror Size Is <u>60GB</u> In This Group.\n\n‼️ Do Not Forget To Read Group Rules.\n\n✅ Check Progress : /{BotCommands.StatusCommand}</b>", bot, update)
     if len(Interval) == 0:
         Interval.append(setInterval(DOWNLOAD_STATUS_UPDATE_INTERVAL, update_all_messages))
 
@@ -310,3 +352,4 @@ unzip_mirror_handler = CommandHandler(BotCommands.UnzipMirrorCommand, unzip_mirr
 dispatcher.add_handler(mirror_handler)
 dispatcher.add_handler(tar_mirror_handler)
 dispatcher.add_handler(unzip_mirror_handler)
+

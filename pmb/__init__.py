@@ -5,41 +5,43 @@ import time
 import random
 import string
 import aria2p
+
 import telegram.ext as tg
 from dotenv import load_dotenv
 from pyrogram import Client
 from telegraph import Telegraph
+
 from pmb.helper.config import dynamic
 from pmb.helper.config.load import update_dat
 import psycopg2
 from psycopg2 import Error
-
-import socket
-import faulthandler
-faulthandler.enable()
 from megasdkrestclient import MegaSdkRestClient, errors as mega_err
 import subprocess
 
+import socket
+import faulthandler
+
+faulthandler.enable()
+
 socket.setdefaulttimeout(600)
+
+botStartTime = time.time()
+if os.path.exists('log.txt'):
+    with open('log', 'r+') as f:
+        f.truncate(0)
+        
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    handlers=[logging.FileHandler('log.txt'), logging.StreamHandler()],
+                    level=logging.INFO)        
 
 def getConfig(name: str):
     return os.environ[name]
-
-botStartTime = time.time()
-if os.path.exists('priiiiyo-mirror-bot.txt'):
-    with open('priiiiyo-mirror-bot.txt', 'r+') as f:
-        f.truncate(0)
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[logging.FileHandler('priiiiyo-mirror-bot.txt'), logging.StreamHandler()],
-                    level=logging.INFO)
 
 dynamic.handler()
 
 load_dotenv('config.env')
 
 Interval = []
-
 
 LOGGER = logging.getLogger(__name__)
 
@@ -62,18 +64,14 @@ def mktable():
         LOGGER.error(e)
         exit(1)
 
-aria2 = aria2p.API(
-    aria2p.Client(
-        host="http://localhost",
-        port=6800,
-        secret="",
-    )
-)
+aria2 = aria2p.API(aria2p.Client(host="http://localhost", port=6800, secret=""))
 
 DOWNLOAD_DIR = None
 BOT_TOKEN = None
 TELEGRAM_API = None
 TELEGRAM_HASH = None
+GROUP_ID = None
+DB_URI = None
 
 download_dict_lock = threading.Lock()
 status_reply_dict_lock = threading.Lock()
@@ -106,6 +104,7 @@ try:
     AUTO_DELETE_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_MESSAGE_DURATION'))
     TELEGRAM_API = getConfig('TELEGRAM_API')
     TELEGRAM_HASH = getConfig('TELEGRAM_HASH')
+    GROUP_ID = getConfig("GROUP_ID")
 except KeyError as e:
     LOGGER.error("One or more env variables missing! Exiting now")
     exit(1)
@@ -282,7 +281,7 @@ except KeyError:
 try:
     IMAGE_URL = getConfig('IMAGE_URL')
 except KeyError:
-    IMAGE_URL = 'https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg'
+    IMAGE_URL = 'https://telegra.ph/file/b5d9a2910d65ce0596f59.jpg'
 
     
 

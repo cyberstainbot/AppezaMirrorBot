@@ -11,7 +11,7 @@ aria2c: subprocess.Popen
 def ariaDaemonStart():
     global aria2c
     ariaScriptName = 'aria.sh'
-    ariaLogName = 'aria-priiiiyo-mirror-bot.txt'
+    ariaLogName = 'aria_log.txt'
     trackerslistName = 'trackerslist.txt'
     for file in [ariaScriptName, ariaLogName, trackerslistName]:
         if os.path.exists(file):

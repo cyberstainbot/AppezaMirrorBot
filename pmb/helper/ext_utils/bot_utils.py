@@ -24,7 +24,7 @@ class MirrorStatus:
 
 
 PROGRESS_MAX_SIZE = 100 // 8
-PROGRESS_INCOMPLETE = ['✦', '✦', '✦', '✦', '✦', '✦', '✦']
+PROGRESS_INCOMPLETE = ['✧', '✧', '✧', '✧', '✧', '✧', '✧']
 
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
@@ -91,7 +91,7 @@ def get_progress_bar_string(status):
 
 def get_readable_message():
     with download_dict_lock:
-        msg = "✥════ @𝐏𝐫𝐢𝐢𝐢𝐢𝐲𝐨𝐁𝐎𝐓𝐬 ════✥"
+        msg = "✥═══ @𝐏𝐫𝐢𝐢𝐢𝐢𝐲𝐨𝐁𝐎𝐓𝐬 ═══✥"
         for download in list(download_dict.values()):
             msg += f"<b>\n\n🗂 𝗙𝗶𝗹𝗲𝗡𝗮𝗺𝗲 : </b> <code>{download.name()}</code>"
             msg += f"\n<b>🚦 𝐒𝐭𝐚𝐭𝐮𝐬 : </b> <i>{download.status()}</i>"
@@ -101,15 +101,15 @@ def get_readable_message():
                     msg += f"\n<b>📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝𝐞𝐝 : </b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                 else:
                     msg += f"\n<b>📤 𝐔𝐩𝐥𝐨𝐚𝐝𝐞𝐝 : </b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
-                msg += f"\n<b>🚀 𝐒𝐩𝐞𝐞𝐝 : </b> {download.speed()}, \n<b>⏳ 𝐄𝐓𝐀 : </b> {download.eta()} "
+                    msg += f"\n<b>🚀 𝐒𝐩𝐞𝐞𝐝 : </b> {download.speed()}, \n<b>⏳ 𝐄𝐓𝐀 : </b> {download.eta()} "
                 # if hasattr(download, 'is_torrent'):
                 try:
-                    msg += f"\n<b>⚓️ 𝐈𝐧𝐟𝐨 : -Seeders:</b> {download.aria_download().num_seeders}" \
-                        f" | <b>🔄 𝐏𝐞𝐞𝐫𝐬 : </b> {download.aria_download().connections}"
+                    msg += f"\n<b>⚓️ 𝐈𝐧𝐟𝐨 : -𝐒𝐞𝐞𝐝𝐞𝐫𝐬 : </b> {download.aria_download().num_seeders}" \
+                           f"\n<b>🔄 𝐏𝐞𝐞𝐫𝐬 : </b> {download.aria_download().connections}"
                 except:
                     pass
             if download.status() == MirrorStatus.STATUS_DOWNLOADING:
-                msg += f"\n<b>🚫 𝐓𝐨 𝐒𝐭𝐨𝐩 : </b> <code>/{BotCommands.CancelMirror} {download.gid()}</code>"
+                msg += f"\n<b>🚫 𝐓𝐨 𝐒𝐭𝐨𝐩 : </b> <code>/{BotCommands.CancelMirrorCommand} {download.gid()}</code>"
             msg += "\n\n"
         return msg
 
@@ -161,3 +161,4 @@ def new_thread(fn):
         return thread
 
     return wrapper
+

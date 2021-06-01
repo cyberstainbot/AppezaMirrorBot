@@ -7,12 +7,12 @@ from html_telegraph_poster import TelegraphPoster
 def post_to_telegraph(a_title: str, content: str) -> str:
     """ Create a Telegram Post using HTML Content """
     post_client = TelegraphPoster(use_api=True)
-    auth_name = "mirrror-bot"
+    auth_name = "👲 𝗨𝗽𝗹𝗼𝗮𝗱 𝗕𝘆 𝗣𝗥𝗜𝗜𝗜𝗜𝗬𝗢 𝗠𝗜𝗥𝗥𝗢𝗥 𝗕𝗢𝗧"
     post_client.create_api_token(auth_name)
     post_page = post_client.post(
         title=a_title,
         author=auth_name,
-        author_url="https://github.com/priiiyo/priiiyo-mirror-bot",
+        author_url="https://github.com/priiIiyo/priIiiyo-mirror-bot",
         text=content,
     )
     return post_page["url"]

@@ -14,6 +14,7 @@ import json
 import math
 import re
 import urllib.parse
+from urllib.parse import urlparse
 from os import popen
 from random import choice
 
@@ -44,6 +45,8 @@ def direct_link_generator(link: str):
         return github(link)
     elif 'racaty.net' in link:
         return racaty(link)
+    elif 'pixeldrain.com' in link:
+        return pixel_drain(link)    
     else:
         raise DirectDownloadLinkException(f'No Direct link function found for {link}')
         
@@ -142,6 +145,18 @@ def mediafire(url: str) -> str:
     info = page.find('a', {'aria-label': 'Download file'})
     dl_url = info.get('href')
     return dl_url
+    
+    
+def pixel_drain(url: str) -> str:
+    dl_url = ''
+    try:
+        link = re.findall(r'\bhttps?://.*pixeldrain\.com\S+', url)[0]
+    except IndexError:
+        raise DirectDownloadLinkException("`No Pixeldrain links found`\n")
+    pixel_drain_link = urlparse(url)
+    file_id = pixel_drain_link.path[3:]
+    dl_url = 'https://pixeldrain.com/api/file/%s' % (file_id)
+    return dl_url    
 
 
 def osdn(url: str) -> str:

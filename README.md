@@ -1,7 +1,19 @@
-[![Priiiyo](https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg)](http://t.me/PriiiyoMirror)
+[![Priiiyo](https://telegra.ph/file/b5d9a2910d65ce0596f59.jpg)](http://t.me/PriiiyoMirror)
 
-# Priiiiyo Mirror Bot
-A Telegram bot which can mirror all your links to Google drive! This is the Modified version.
+# Priiiiyo Mirror Bot 
+![GitHub Repo stars](https://img.shields.io/github/stars/priiiiyo/priiiiyo-mirror-bot?color=blue&style=flat)
+![GitHub forks](https://img.shields.io/github/forks/priiiiyo/priiiiyo-mirror-bot?color=green&style=flat)
+![GitHub issues](https://img.shields.io/github/issues/priiiiyo/priiiiyo-mirror-bot)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/priiiiyo/priiiiyo-mirror-bot)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/priiiiyo/priiiiyo-mirror-bot)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/priiiiyo/priiiiyo-mirror-bot)
+![GitHub contributors](https://img.shields.io/github/contributors/priiiiyo/priiiiyo-mirror-bot?style=flat)
+![GitHub repo size](https://img.shields.io/github/repo-size/priiiiyo/priiiiyo-mirror-bot?color=red)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/priiiiyo/priiiiyo-mirror-bot)
+[![Priiiiyo Mirror Support](https://img.shields.io/badge/priiiiyo%20mirror%20group-blue)](https://t.me/PriiiiyoMirror)
+
+
+ **Priiiiyo Mirror Bot** A Telegram bot which can mirror all your links to Google drive! This is the Modified version.
 
 # Features supported:
 
@@ -39,7 +51,10 @@ NTFS, RPM, SquashFS, UDF, VHD, XAR, Z.
 - Speedtest with picture results
 - Limiting torrent size support
 - Sudo with database support
+- Multiple Trackers support
 - Check Heroku dynos stats
+- Pixeldrain.com support
+- Counting file/folders
 - Custom image support
 - Racaty.net support
 - Shell and Executor
@@ -78,7 +93,7 @@ Deploying is pretty much straight forward and is divided into several steps as f
 
 - Clone this repo:
 ```
-git clone https://github.com/priiiiyo/priiiiyo-mirror-bot
+git clone https://github.com/priiiiyo/priiiiyo-mirror-bot priiiiyo-mirror-bot/
 cd priiiiyo-mirror-bot
 ```
 - Install requirements
@@ -108,20 +123,22 @@ cp config_sample.env config.env
 _____REMOVE_THIS_LINE_____=True
 ```
 Fill up rest of the fields. Meaning of each fields are discussed below:
-
+### Required Config
 - **BOT_TOKEN**: The telegram bot token that you get from [@BotFather](https://t.me/BotFather)
 - **GDRIVE_FOLDER_ID**: This is the folder ID of the Google Drive Folder to which you want to upload all the mirrors.
 - **DOWNLOAD_DIR**: The path to the local folder where the downloads should be downloaded to
 - **DOWNLOAD_STATUS_UPDATE_INTERVAL**: A short interval of time in seconds after which the Mirror progress message is updated. (I recommend to keep it 5 seconds at least)  
-- **OWNER_ID**: The Telegram user ID (not username) of the owner of the bot
-- **AUTHORIZED_CHATS**: Fill user_id and chat_id of you want to authorize.
-- **DATABASE_URL**: Your Database URL. See Generate Database to generate database. (NOTE: If you deploying on Heroku, no need to generate database manually, because it will automatic generate database).
-- **AUTO_DELETE_MESSAGE_DURATION**: Interval of time (in seconds), after which the bot deletes it's message (and command message) which is expected to be viewed instantly. Note: Set to -1 to never automatically delete messages
-- **IS_TEAM_DRIVE**: (Optional field) Set to `True` if GDRIVE_FOLDER_ID is from a Team Drive else False or Leave it empty.
-- **USE_SERVICE_ACCOUNTS**: (Optional field) (Leave empty if unsure) Whether to use service accounts or not. For this to work see "Using service accounts" section below.
-- **INDEX_URL**: (Optional field) Refer to https://github.com/maple3142/GDIndex/ The URL. See [Generate Database](https://github.com/priiiiyo/priiiiyo-mirror-bot/tree/master#generate-database) should not have any trailing '/'
+- **OWNER_ID**: The Telegram user ID (not username) of the owner of the bot.
 - **API_KEY**: This is to authenticate to your telegram account for downloading Telegram files. You can get this from https://my.telegram.org DO NOT put this in quotes.
 - **API_HASH**: This is to authenticate to your telegram account for downloading Telegram files. You can get this from https://my.telegram.org
+- **DATABASE_URL**: Your Database URL. See Generate Database to generate database. (NOTE: If you deploying on Heroku, no need to generate database manually, because it will automatic generate database).
+- **AUTO_DELETE_MESSAGE_DURATION**: Interval of time (in seconds), after which the bot deletes it's message (and command message) which is expected to be viewed instantly. Note: Set to -1 to never automatically delete messages
+### Optional Field
+- **AUTHORIZED_CHATS**: Fill user_id and chat_id of you want to authorize.
+- **GROUP_ID**: Add Group id to get 'Bot Restarted' msg after bot restarts.
+- **IS_TEAM_DRIVE**: (Optional config) Set to `True` if GDRIVE_FOLDER_ID is from a Team Drive else False or Leave it empty.
+- **USE_SERVICE_ACCOUNTS**: (Optional field) (Leave empty if unsure) Whether to use service accounts or not. For this to work see "Using service accounts" section below.
+- **INDEX_URL**: (Optional field) Refer to https://github.com/maple3142/GDIndex/ The URL. See [Generate Database](https://github.com/priiiiyo/priiiiyo-mirror-bot/tree/master#generate-database) should not have any trailing '/'
 - **MEGA_KEY**: Mega.nz api key to mirror mega.nz links. Get it from [Mega SDK Page](https://mega.nz/sdk)
 - **MEGA_USERNAME**: Your mega email id (You can leave it empty, it will start megasdkrest server in anonymous mode)
 - **MEGA_PASSWORD**: Your password for your mega.nz account. (**NOTE**: You must deactivate 2FA to use the account with the bot otherwise bot will not be able to sign in)
@@ -144,12 +161,21 @@ urlshortx.com
 shortzon.com
 ```
 
-**Note**: Above are the supported url shorteners. Except these only some url shorteners are supported. If you want to use any other url shortener then first ask me that shortener is supported or not.
+Above are the supported url shorteners. Except these only some url shorteners are supported. If you want to use any other url shortener then first ask me that shortener is supported or not.
+
+**Note**: You can limit maximum concurrent downloads by changing the value of **MAX_CONCURRENT_DOWNLOADS** in aria.sh. By default, it's set to `7`.
+### Add more buttons (Optional)
+Two buttons are already added of File Link and Index Link, you can add extra buttons too, these are optional, if you don't know what are below entries, simply leave them, don't fill anything in them.
+- **BUTTON_THREE_NAME**:
+- **BUTTON_THREE_URL**:
+- **BUTTON_FOUR_NAME**:
+- **BUTTON_FOUR_URL**:
+- **BUTTON_FIVE_NAME**:
+- **BUTTON_FIVE_URL**:
 
 </details>
 
 ## Getting Google OAuth API credential file
-
 - Visit the [Google Cloud Console](https://console.developers.google.com/apis/credentials)
 - Go to the OAuth Consent tab, fill it, and save.
 - Go to the Credentials tab and click Create Credentials -> OAuth Client ID

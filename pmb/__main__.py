@@ -1,33 +1,35 @@
 import os
-import shutil, psutil
+import pytz
+import time
+import shutil
+import psutil
 import signal
-import pickle
+
 from pyrogram import idle
 from pmb import app
 from os import execl, kill, path, remove
 from sys import executable
 from datetime import datetime
-import pytz
-import time
 from telegram import ParseMode, BotCommand, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
-from pmb import bot, dispatcher, updater, botStartTime, IMAGE_URL
+from telegram.error import BadRequest, Unauthorized
+from pmb import bot, dispatcher, updater, botStartTime, IMAGE_URL, GROUP_ID
+
 from pmb.helper.ext_utils import fs_utils
 from pmb.helper.telegram_helper.bot_commands import BotCommands
 from pmb.helper.telegram_helper.message_utils import *
+from pmb.helper.telegram_helper import button_build
 from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time
 from .helper.telegram_helper.filters import CustomFilters
 from .helper.config import editor
 from .helper.config.subproc import killAll
 from .helper.config import sync
 from .helper.config.dynamic import configList, DYNAMIC_CONFIG
-from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, anime, stickers, search, delete, speedtest, usage, mediainfo 
-
-from pyrogram import idle
-from pmb import app
+from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, anime, stickers, search, delete, speedtest, usage, mediainfo, count
 
 now=datetime.now(pytz.timezone('Asia/Dhaka'))
+
 
 def stats(update: Update, context: CallbackContext):
     currentTime = get_readable_time(time.time() - botStartTime)
@@ -41,7 +43,7 @@ def stats(update: Update, context: CallbackContext):
     cpuUsage = psutil.cpu_percent(interval=0.5)
     memory = psutil.virtual_memory().percent
     disk = psutil.disk_usage('/').percent
-    stats = f'<b>╭──「  ⭕️ BOT STATISTICS ⭕️ 」 </b>\n' \
+    stats = f'<b>╭──「  ⭕️ BOT STATS ⭕️ 」 </b>\n' \
             f'<b>│</b>\n' \
             f'<b>├  ⏰ Bot Uptime : {currentTime}</b>\n' \
             f'<b>├  🔊 Start Time :</b> {current}\n' \
@@ -61,29 +63,26 @@ def stats(update: Update, context: CallbackContext):
 
 def start(update: Update, context: CallbackContext):
     start_string = f'''
-This is a bot which can mirror all your links to Google drive!
+This bot can mirror all your links to Google drive!
 
 👲 Modded By: @priiiiyo
 
 Type /{BotCommands.HelpCommand} to get a list of available commands
 '''
-    update.effective_message.reply_photo(IMAGE_URL, start_string, parse_mode=ParseMode.MARKDOWN)
-
-    
-def owner(update: Update, context: CallbackContext):
-    button = [
-    [InlineKeyboardButton("👤 Owner 👤", url=f"https://t.me/priiiiyo")],
-    [InlineKeyboardButton("🔰 Mirror Group 🔰", url=f"https://t.me/PriiiiyoMirror")]]
-    reply_markup = InlineKeyboardMarkup(button)
-    update.effective_message.reply_photo(IMAGE_URL, reply_markup=reply_markup)
-
-
-def repo(update: Update, context: CallbackContext):
-    button = [
-    [InlineKeyboardButton("⚠️ Repo ⚠️", url=f"https://github.com/priiiiyo/priiiiyo-mirror-bot")],
-    [InlineKeyboardButton("🔰 Support Group 🔰", url=f"https://t.me/PriiiiyoBOTs_Support")]]
-    reply_markup = InlineKeyboardMarkup(button)
-    update.effective_message.reply_photo(IMAGE_URL, reply_markup=reply_markup)
+    buttons = button_build.ButtonMaker()
+    buttons.buildbutton("👤 ᴏᴡɴᴇʀ 👤", "https://t.me/priiiiyo")
+    buttons.buildbutton("💎 ʀᴇᴘᴏ 💎", "https://github.com/priiiiyo/priiiiyo-mirror-bot")
+    buttons.buildbutton("Ⓜ️ ᴍɪʀʀᴏʀ ɢʀᴏᴜᴘ Ⓜ️", "https://t.me/PriiiiyoMirror")
+    buttons.buildbutton("⚙️ ᴘʀɪɪɪɪʏᴏ ʙᴏᴛꜱ ⚙️", "http://t.me/PriiiiyoBOTs")
+    reply_markup = InlineKeyboardMarkup(buttons.build_menu(2))
+    LOGGER.info('UID: {} - UN: {} - MSG: {}'.format(update.message.chat.id, update.message.chat.username, update.message.text))
+    if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
+        if update.message.chat.type == "private" :
+            sendMessage(f"Hey I'm Alive 🙂", context.bot, update)
+        else :
+            update.effective_message.reply_photo(IMAGE_URL, start_string, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+    else :
+        sendMessage(f"Oops! not a Authorized user.", context.bot, update)
 
 
 def restart(update: Update, context: CallbackContext):
@@ -101,7 +100,7 @@ def restart(update: Update, context: CallbackContext):
     # Save restart message info in order to reply to it after restarting
     restart_msg_dat = f"{restart_msg.chat_id} {restart_msg.message_id}"
     open('restart_msg.txt', 'wt').write(restart_msg_dat)
-    execl(executable, executable, "-m", "pmb")
+    os.execl(executable, executable, "-m", "pmb")
 
 
 def ping(update: Update, context: CallbackContext):
@@ -117,47 +116,55 @@ def log(update: Update, context: CallbackContext):
 
 def bot_help(update: Update, context: CallbackContext):
     help_string_adm = f'''
-/{BotCommands.HelpCommand}: To get this message
+/{BotCommands.StartCommand}: Started the bot.
+    
+/{BotCommands.HelpCommand}: To get this message.
 
 /{BotCommands.MirrorCommand} [download_url][magnet_link]: Start mirroring the link to Google Drive.
 
-/{BotCommands.UnzipMirrorCommand} [download_url][magnet_link]: Starts mirroring and if downloaded file is any archive, extracts it to Google Drive
+/{BotCommands.UnzipMirrorCommand} [download_url][magnet_link]: Starts mirroring and if downloaded file is any archive, extracts it to Google Drive.
 
-/{BotCommands.TarMirrorCommand} [download_url][magnet_link]: Start mirroring and upload the archived (.tar) version of the download
+/{BotCommands.TarMirrorCommand} [download_url][magnet_link]: Start mirroring and upload the archived (.tar) version of the download.
 
-/{BotCommands.CloneCommand}: Copy file/folder to Google Drive
+/{BotCommands.CloneCommand}: Copy file/folder to Google Drive.
 
-/{BotCommands.DeleteCommand} [link]: Delete file from Google Drive (Only Owner & Sudo)
+/{BotCommands.CountCommand}: Count files/folders of G-Drive Links.
+
+/{BotCommands.DeleteCommand} [link]: Delete file from Google Drive (Only Owner & Sudo).
 
 /{BotCommands.WatchCommand} [youtube-dl supported link]: Mirror through youtube-dl. Click /{BotCommands.WatchCommand} for more help.
 
-/{BotCommands.TarWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading
+/{BotCommands.TarWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading.
 
-/{BotCommands.CancelMirror}: Reply to the message by which the download was initiated and that download will be cancelled
+/{BotCommands.CancelMirrorCommand}: Reply to the message by which the download was initiated and that download will be cancelled.
 
-/{BotCommands.StatusCommand}: Shows a status of all the downloads
+/{BotCommands.CancelAllCommand}: Cancels all running tasks (downloads, uploads, archiving, unarchiving).
 
-/{BotCommands.ListCommand} [search term]: Searches the search term in the Google Drive, if found replies with the link
+/{BotCommands.StatusCommand}: Shows a status of all the downloads.
 
-/{BotCommands.StatsCommand}: Show Stats of the machine the bot is hosted on
+/{BotCommands.ListCommand} [search term]: Searches the search term in the Google Drive, if found replies with the link.
 
-/{BotCommands.AuthorizeCommand}: Authorize a chat or a user to use the bot (Can only be invoked by Owner & Sudo of the bot)
+/{BotCommands.StatsCommand}: Show Stats of the machine the bot is hosted on.
 
-/{BotCommands.UnAuthorizeCommand}: Unauthorize a chat or a user to use the bot (Can only be invoked by Owner & Sudo of the bot)
+/{BotCommands.AuthorizeCommand}: Authorize a chat or a user to use the bot (Can only be invoked by Owner & Sudo of the bot).
 
-/{BotCommands.AuthorizedUsersCommand}: Show authorized users (Only Owner & Sudo)
+/{BotCommands.UnAuthorizeCommand}: Unauthorize a chat or a user to use the bot (Can only be invoked by Owner & Sudo of the bot).
 
-/{BotCommands.AddSudoCommand}: Add sudo user (Only Owner)
+/{BotCommands.AuthorizedUsersCommand}: Show authorized users (Only Owner & Sudo).
 
-/{BotCommands.RmSudoCommand}: Remove sudo users (Only Owner)
+/{BotCommands.AddSudoCommand}: Add sudo user (Only Owner).
 
-/{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports
+/{BotCommands.RmSudoCommand}: Remove sudo users (Only Owner).
+
+/{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports.
 
 /{BotCommands.UsageCommand}: To see Heroku Dyno Stats (Owner & Sudo only).
 
-/{BotCommands.SpeedCommand}: Check Internet Speed of the Host
+/{BotCommands.SpeedCommand}: Check Internet Speed of the Host.
 
-/{BotCommands.RepoCommand}: Get the bot repo.
+/{BotCommands.ConfigCommand}: Edit 'config.env' file.
+
+/{BotCommands.PingCommand}: Ping the bot.
 
 /shell: Run commands in Shell (Terminal).
 
@@ -171,31 +178,35 @@ def bot_help(update: Update, context: CallbackContext):
 '''
 
     help_string = f'''
-/{BotCommands.HelpCommand}: To get this message
+/{BotCommands.StartCommand}: Started the bot.
+    
+/{BotCommands.HelpCommand}: To get this message.
 
 /{BotCommands.MirrorCommand} [download_url][magnet_link]: Start mirroring the link to Google Drive.
 
-/{BotCommands.UnzipMirrorCommand} [download_url][magnet_link]: Starts mirroring and if downloaded file is any archive, extracts it to Google Drive
+/{BotCommands.UnzipMirrorCommand} [download_url][magnet_link]: Starts mirroring and if downloaded file is any archive, extracts it to Google Drive.
 
-/{BotCommands.TarMirrorCommand} [download_url][magnet_link]: Start mirroring and upload the archived (.tar) version of the download
+/{BotCommands.TarMirrorCommand} [download_url][magnet_link]: Start mirroring and upload the archived (.tar) version of the download.
 
-/{BotCommands.CloneCommand}: Copy file/folder to Google Drive
+/{BotCommands.CloneCommand}: Copy file/folder to Google Drive.
+
+/{BotCommands.CancelMirrorCommand}: Reply to the message by which the download was initiated and that download will be cancelled.
+
+/{BotCommands.CancelAllCommand}: Cancels all running tasks (downloads, uploads, archiving, unarchiving).
+
+/{BotCommands.CountCommand}: Count files/folders of G-Drive Links.
 
 /{BotCommands.WatchCommand} [youtube-dl supported link]: Mirror through youtube-dl. Click /{BotCommands.WatchCommand} for more help.
 
-/{BotCommands.TarWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading
+/{BotCommands.TarWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading.
 
-/{BotCommands.CancelMirror}: Reply to the message by which the download was initiated and that download will be cancelled
+/{BotCommands.StatusCommand}: Shows a status of all the downloads.
 
-/{BotCommands.StatusCommand}: Shows a status of all the downloads
+/{BotCommands.ListCommand} [search term]: Searches the search term in the Google Drive, if found replies with the link.
 
-/{BotCommands.ListCommand} [search term]: Searches the search term in the Google Drive, if found replies with the link
+/{BotCommands.StatsCommand}: Show Stats of the machine the bot is hosted on.
 
-/{BotCommands.StatsCommand}: Show Stats of the machine the bot is hosted on
-
-/{BotCommands.SpeedCommand}: Check Internet Speed of the Host
-
-/{BotCommands.RepoCommand}: Get the bot repo.
+/{BotCommands.SpeedCommand}: Check Internet Speed of the Host.
 
 /mediainfo: Get detailed info about replied media.
 
@@ -213,13 +224,16 @@ def bot_help(update: Update, context: CallbackContext):
 
 
 botcmds = [
+BotCommand(f'{BotCommands.StartCommand}', 'Started the bot'),
+BotCommand(f'{BotCommands.MirrorCommand}', 'Start Mirroring'),
 BotCommand(f'{BotCommands.MirrorCommand}', 'Start Mirroring'),
 BotCommand(f'{BotCommands.TarMirrorCommand}','Upload tar (zipped) file'),
 BotCommand(f'{BotCommands.UnzipMirrorCommand}','Extract files'),
 BotCommand(f'{BotCommands.CloneCommand}','Copy file/folder to Drive'),
+BotCommand(f'{BotCommands.CountCommand}','Count files/folders of G-Drive Links'),
 BotCommand(f'{BotCommands.WatchCommand}','Mirror YT-DL support link'),
 BotCommand(f'{BotCommands.TarWatchCommand}','Mirror Youtube playlist link as tar'),
-BotCommand(f'{BotCommands.CancelMirror}','Cancel a task'),
+BotCommand(f'{BotCommands.CancelMirrorCommand}','Cancel a task'),
 BotCommand(f'{BotCommands.CancelAllCommand}','Cancel all tasks'),
 BotCommand(f'{BotCommands.DeleteCommand}','Delete file from Drive'),
 BotCommand(f'{BotCommands.ListCommand}',' [query] Searches files in G-Drive'),
@@ -230,20 +244,30 @@ BotCommand(f'{BotCommands.HelpCommand}','Get Detailed Help'),
 BotCommand(f'{BotCommands.SpeedCommand}','Check Speed of the host'),
 BotCommand(f'{BotCommands.LogCommand}','Bot Log [owner only]'),
 BotCommand(f'{BotCommands.UsageCommand}','To see Heroku Dyno Stats (Owner only)'),
-BotCommand(f'{BotCommands.OwnerCommand}','Check Who is My master'),
 BotCommand(f'{BotCommands.RestartCommand}','Restart bot [owner only]'),
-BotCommand(f'{BotCommands.RepoCommand}','Get the bot repo')]
+BotCommand(f'{BotCommands.ConfigCommand}','Edit (config.env) file'),]
 
 
 def main():
     fs_utils.start_cleanup()
     # Check if the bot is restarting
-    if path.exists('restart_msg.txt'):
+    
+    if GROUP_ID is not None and isinstance(GROUP_ID, str):
+        try:
+            dispatcher.bot.sendMessage(f"{GROUP_ID}", "Bot Restarted")
+
+        except Unauthorized:
+            LOGGER.warning("Bot isnt able to send message to support_chat, go and check!")
+
+        except BadRequest as e:
+            LOGGER.warning(e.message)
+
+    if os.path.isfile('restart_msg.txt'):
         restart_msg_dat = open('restart_msg.txt', 'rt').read().split(' ')
         bot.editMessageText(text='Sync Completed!\nRestarted Successfully!',
                             chat_id=restart_msg_dat[0], message_id=restart_msg_dat[1])
         LOGGER.info('Restarted Successfully!')
-        remove('restart_msg.txt')
+        os.remove('restart_msg.txt')
     bot.set_my_commands(botcmds)
         
     start_handler = CommandHandler(BotCommands.StartCommand, start,
@@ -257,10 +281,6 @@ def main():
     stats_handler = CommandHandler(BotCommands.StatsCommand,
                                    stats, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
     log_handler = CommandHandler(BotCommands.LogCommand, log, filters=CustomFilters.owner_filter, run_async=True)
-    repo_handler = CommandHandler(BotCommands.RepoCommand, repo,
-                                  filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
-    owner_handler = CommandHandler(BotCommands.OwnerCommand, owner,
-                                   filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
     config_handler = editor.handler
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(ping_handler)
@@ -268,8 +288,6 @@ def main():
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(stats_handler)
     dispatcher.add_handler(log_handler)
-    dispatcher.add_handler(repo_handler)
-    dispatcher.add_handler(owner_handler)
     dispatcher.add_handler(config_handler)
     updater.start_polling()
     LOGGER.info("Bot Started!")
