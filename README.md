@@ -382,4 +382,4 @@ Thanks to:
 - [SVR666](https://github.com/SVR666) for some features & fixes
 - [Breakdowns](https://github.com/breakdowns) for some cool modules
 
-and many more people who aren't mentioned here, but may be found in [Contributors](https://github.com/priiiyo/priiiyo-mirror-bot/graphs/contributors).
+and many more people who aren't mentioned here, but may be found in [Contributors](https://github.com/priiiiyo/priiiiyo-mirror-bot/graphs/contributors).
