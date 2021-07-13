@@ -1,21 +1,21 @@
 {
-    "name": "priiiiyo-mirror-bot ",
-    "description": "A Telegram Bot which can mirror all your links to Google drive!",
-    "logo": "https://telegra.ph/file/9f79dea91ab7cda63dc46.jpg",
+    "name": "priiiiyo-mirror-bot",
+    "description": "Priiiiyo Mirror Bot Is A Telegram Bot which can mirror all your links to Google Drive! This is the Modified Version",
+    "logo": "https://telegra.ph/file/b5d9a2910d65ce0596f59.jpg",
     "keywords": [
       "bot",
       "telegram",
       "python"
     ],
     "repository": "https://github.com/priiiiyo/priiiiyo-mirror-bot",
-    "website": "https://t.me/PriiiiyoMirror",
-    "success_url": "https://github.com/priiiiyo/priiiiyo-mirror-bot/blob/master/README.md",
+    "website": "https://github.com/priiiiyo/priiiiyo-mirror-bot",
+    "success_url": "https://t.me/PriiiiyoMirror",
     "stack": "container",
     "env": {
       "ENV": {
-      "description": "Setting this to ANYTHING will enable Webhooks when in env mode",
-      "value": "ANYTHING"
-    },
+        "description": "Setting this to ANYTHING will enable Webhooks when in env mode",
+        "value": "ANYTHING"
+      },
       "BOT_TOKEN": {
         "description": "The telegram bot token that you get from @BotFather.",
         "required": true
@@ -26,7 +26,7 @@
       },
       "DOWNLOAD_DIR": {
         "description": "The path to the local folder where the downloads should be downloaded to.",
-        "value": "/home/priiiyo/mirror-bot/downloads",
+        "value": "/usr/src/app/downloads",
         "required": false
       },
       "DOWNLOAD_STATUS_UPDATE_INTERVAL": {
@@ -47,7 +47,7 @@
         "required": false
       },
       "USE_SERVICE_ACCOUNTS": {
-        "description": "Whether to use service accounts or not. For this to work see 'Using service accounts' in repo.",
+        "description": "Whether to use Service Accounts or not. For this to work see 'Using Service Accounts' in repo.",
         "required": false
       },
       "AUTHORIZED_CHATS": {
@@ -55,15 +55,15 @@
         "required": false
       },
       "INDEX_URL": {
-        "description": "Refer to https://github.com/maple3142/GDIndex/ The URL should not have any trailing '/'.",
+        "description": "Refer to https://github.com/ParveenBhadooOfficial/Google-Drive-Index The URL should not have any trailing '/'.",
         "required": false
       },
       "TELEGRAM_API": {
-        "description": "This is to authenticate to your telegram account for downloading Telegram files. You can get this from https://my.telegram.org.",
+        "description": "This is to authenticate to your Telegram account for downloading Telegram files. You can get this from https://my.telegram.org.",
         "required": true
       },
       "TELEGRAM_HASH": {
-        "description": "This is to authenticate to your telegram account for downloading Telegram files. You can get this from https://my.telegram.org.",
+        "description": "This is to authenticate to your Telegram account for downloading Telegram files. You can get this from https://my.telegram.org.",
         "required": true
       },
       "HEROKU_API_KEY": {
@@ -72,6 +72,16 @@
       },
       "HEROKU_APP_NAME": {
         "description": "Add the Heroku app name here.",
+        "required": true
+      },
+      "UPSTREAM_REPO": {
+        "description": "Link for Bot Upstream Repo, If you want default update, Fill https://github.com/priiiiyo/priiiiyo-mirror-bot.",
+        "value": "https://github.com/priiiiyo/priiiiyo-mirror-bot",
+        "required": true
+      },
+      "UPSTREAM_BRANCH": {
+        "description": "Branch name for Upstream Repo (Recommended using master branch).",
+        "value": "master",
         "required": true
       },
       "UPTOBOX_TOKEN": {
@@ -98,18 +108,36 @@
         "description": "If you want to remove mega.nz mirror support, set it to True.",
         "required": false
       },
-      "ENABLE_FILESIZE_LIMIT": {
-        "description": "Set it to True if you want to use MAX_TORRENT_SIZE.",
-        "value": "False",
+      "TORRENT_DIRECT_LIMIT": {
+        "description": "To limit the Torrent/Direct mirror size, Leave space between number and unit. Available units is (gb or GB, tb or TB).",
         "required": false
       },
-      "MAX_TORRENT_SIZE": {
-        "description": "To limit the torrent mirror size, Fill The amount you want to limit, examples: if you fill 15 it will limit 15gb.",
-        "value": "15",
+      "TAR_UNZIP_LIMIT": {
+        "description": "To limit mirroring as Tar or unzipmirror. Available units is (gb or GB, tb or TB).",
+        "required": false
+      },
+      "CLONE_LIMIT": {
+        "description": "To limit cloning Google Drive (leave space between number and unit, Available units is (gb or GB, tb or TB).",
+        "required": false
+      },
+      "MEGA_LIMIT": {
+        "description": "To limit downloading Mega (leave space between number and unit, Available units is (gb or GB, tb or TB).",
         "required": false
       },
       "STOP_DUPLICATE_MIRROR": {
-        "description": "If this field is set to True, bot will check file in drive, if it is present in drive, downloading will be stopped.",
+        "description": "If this field is set to True, bot will check file in Drive, if it is present in Drive, downloading will be stopped.",
+        "required": false
+      },
+      "STOP_DUPLICATE_MEGA": {
+        "description": "If this field is set to True, bot will check file in Drive, if it is present in Drive, downloading Mega will be stopped.",
+        "required": false
+      },
+      "STOP_DUPLICATE_CLONE": {
+        "description": "If this field is set to True, bot will check file in Drive, if it is present in Drive, cloning will be stopped.",
+        "required": false
+      },
+      "IGNORE_PENDING_REQUESTS": {
+        "description": "If you want the bot to ignore pending requests after it restarts, set this to True.",
         "required": false
       },
       "SHORTENER": {
@@ -121,18 +149,23 @@
         "required": false
       },
       "IMAGE_URL": {
-        "description": "Show Image/Logo in /start message. Fill value of image your link image, use telegra.ph or any direct link image",
-        "value": "https://telegra.ph/file/db03910496f06094f1f7a.jpg",
+        "description": "Show Image/Logo in /start message, Use telegra.ph or any direct link image.",
+        "value": "https://telegra.ph/file/b5d9a2910d65ce0596f59.jpg",
         "required": false
        },
-      "BUTTON_THREE_NAME": {
-        "description": "Extra buttons (optional).",
+      "TOKEN_PICKLE_URL": {
+        "description": "(Optional) Only if you want to load your token.pickle externally from an index link. Fill this with the direct link of that file.",
         "required": false
       },
-      "BUTTON_THREE_URL": {
-        "description": "Fill your URL if you are using extra buttons.",
+      "ACCOUNTS_ZIP_URL": {
+        "description": "(Optional) Only if you want to load your service accs externally from an index link. Archive your service accs json files to a zip file directly (don't archive the accounts folder. Select all the jsons inside and zip them only instead. Name the zip file with whatever you want, it doesn't matter). Fill this with the direct link of that file.",
         "required": false
       },
+      "VIEW_LINK": {
+        "description": "View Link button to open file Index Link in browser instead of direct download link, you can figure out if it's compatible with your Index code or not, open any video from you Index and check if the END of link from browser link bar is ?a=view, if yes make it True it will work (Compatible with Bhadoo Index Code).",
+        "value": "False",
+        "required": false
+       },
       "BUTTON_FOUR_NAME": {
         "description": "Extra buttons (optional).",
         "required": false
@@ -148,11 +181,35 @@
       "BUTTON_FIVE_URL": {
         "description": "Fill your URL if you are using extra buttons.",
         "required": false
+      },
+      "BUTTON_SIX_NAME": {
+        "description": "Extra buttons (optional).",
+        "required": false
+      },
+      "BUTTON_SIX_URL": {
+        "description": "Fill your URL if you are using extra buttons.",
+        "required": false
+      },
+      "FINISHED_PROGRESS_STR": {
+        "description": "Single character for finished progress",
+        "value": "●",
+        "required": false
+      },
+      "UNFINISHED_PROGRESS_STR": {
+        "description": "Single character for unfinished progress",
+        "value": "○",
+        "required": false
       }
     },
     "addons": [
       {
         "plan": "heroku-postgresql"
       }
-    ]
+    ],
+    "formation": {
+            "worker": {
+                "quantity": 1,
+                "size": "free"
+            }
+      }
 }
