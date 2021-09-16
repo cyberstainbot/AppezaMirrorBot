@@ -1,7 +1,7 @@
 import logging
 import threading
 import time
-from bot import LOGGER, download_dict, download_dict_lock, app, STOP_DUPLICATE_MIRROR
+from bot import LOGGER, download_dict, download_dict_lock, app, STOP_DUPLICATE
 from .download_helper import DownloadHelper
 from ..status_utils.telegram_download_status import TelegramDownloadStatus
 from bot.helper.telegram_helper.message_utils import sendMarkup, sendStatusMessage
@@ -77,12 +77,11 @@ class TelegramDownloadHelper(DownloadHelper):
         )
         if download is not None:
             self.__onDownloadComplete()
-        else:
-            if not self.__is_cancelled:
-                self.__onDownloadError('Internal error occurred')
+        elif not self.__is_cancelled:
+            self.__onDownloadError('Internal error occurred')
 
     def add_download(self, message, path, filename):
-        _message = self._bot.get_messages(message.chat.id, message.message_id)
+        _message = self._bot.get_messages(message.chat.id, reply_to_message_ids=message.message_id)
         media = None
         media_array = [_message.document, _message.video, _message.audio]
         for i in media_array:
@@ -98,17 +97,12 @@ class TelegramDownloadHelper(DownloadHelper):
             else:
                 name = filename
                 path = path + name
-            
+
             if download:
-                if STOP_DUPLICATE_MIRROR:
-                    LOGGER.info(f"Checking File/Folder if already in Drive...")
-                    if self.__listener.isTar:
-                        name = name + ".tar"
-                    if self.__listener.extract:           
-                        smsg = None
-                    else:
-                        gd = GoogleDriveHelper()
-                        smsg, button = gd.drive_list(name)
+                if STOP_DUPLICATE:
+                    LOGGER.info('Checking File/Folder if already in Drive...')
+                    gd = GoogleDriveHelper()
+                    smsg, button = gd.drive_list(name, True)
                     if smsg:
                         sendMarkup("File/Folder is already available in Drive.\nHere are the search results:", self.__listener.bot, self.__listener.update, button)
                         return

@@ -1,5 +1,5 @@
 import sys
-from bot import aria2, LOGGER, DOWNLOAD_DIR
+from bot import aria2, LOGGER, DOWNLOAD_DIR, get_client
 import shutil
 import os
 import pathlib
@@ -10,7 +10,7 @@ from .exceptions import NotSupportedExtractionArchive
 
 def clean_download(path: str):
     if os.path.exists(path):
-        LOGGER.info(f"Cleaning download: {path}")
+        LOGGER.info(f"Cleaning Download: {path}")
         shutil.rmtree(path)
 
 
@@ -23,6 +23,8 @@ def start_cleanup():
 
 def clean_all():
     aria2.remove_all(True)
+    get_client().torrents_delete(torrent_hashes="all", delete_files=True)
+    get_client().auth_log_out()
     try:
         shutil.rmtree(DOWNLOAD_DIR)
     except FileNotFoundError:
@@ -52,12 +54,21 @@ def get_path_size(path):
 
 def tar(org_path):
     tar_path = org_path + ".tar"
-    path = pathlib.PurePath(org_path)
+    #path = pathlib.PurePath(org_path)
     LOGGER.info(f'Tar: orig_path: {org_path}, tar_path: {tar_path}')
     tar = tarfile.open(tar_path, "w")
     tar.add(org_path, arcname=os.path.basename(org_path))
     tar.close()
     return tar_path
+
+
+def zip(name, path):
+    root_dir = os.path.dirname(path)
+    base_dir = os.path.basename(path.strip(os.sep))
+    zip_file = shutil.make_archive(name, "zip", root_dir, base_dir)
+    zip_path = shutil.move(zip_file, root_dir)
+    LOGGER.info(f"Zip: {zip_path}")
+    return zip_path
 
 
 def get_base_name(orig_path: str):
@@ -142,5 +153,5 @@ def get_base_name(orig_path: str):
 def get_mime_type(file_path):
     mime = magic.Magic(mime=True)
     mime_type = mime.from_file(file_path)
-    mime_type = mime_type if mime_type else "text/plain"
+    mime_type = mime_type or "text/plain"
     return mime_type

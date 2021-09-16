@@ -1,9 +1,12 @@
+from bot import BOT_NO
+
 class _BotCommands:
     def __init__(self):
         self.StartCommand = 'start'
         self.MirrorCommand = 'mirror'
         self.UnzipMirrorCommand = 'unzipmirror'
         self.TarMirrorCommand = 'tarmirror'
+        self.ZipMirrorCommand = 'zipmirror'
         self.CancelMirror = 'cancel'
         self.CancelAllCommand = 'cancelall'
         self.ListCommand = 'list'
@@ -23,12 +26,13 @@ class _BotCommands:
         self.CountCommand = 'count'
         self.WatchCommand = 'watch'
         self.TarWatchCommand = 'tarwatch'
+        self.ZipWatchCommand = 'zipwatch'
+        self.QbMirrorCommand = 'qbmirror'
+        self.QbUnzipMirrorCommand = 'qbunzipmirror'
+        self.QbTarMirrorCommand = 'qbtarmirror'
+        self.QbZipMirrorCommand = 'qbzipmirror'
         self.DeleteCommand = 'del'
-        self.UsageCommand = 'usage'
-        self.MediaInfoCommand = 'mediainfo'
-        self.ConfigMenuCommand = 'config'
         self.ShellCommand = 'shell'
-        self.UpdateCommand = 'update'
         self.ExecHelpCommand = 'exechelp'
         self.TsHelpCommand = 'tshelp'
 

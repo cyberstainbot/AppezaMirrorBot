@@ -13,14 +13,14 @@ def deletefile(update, context):
 	msg = ''
 	try:
 		link = msg_args[1]
-		LOGGER.info(msg_args[1])
+		LOGGER.info(link)
 	except IndexError:
 		msg = 'Send a link along with command'
 
 	if msg == '' : 
 		drive = gdriveTools.GoogleDriveHelper()
 		msg = drive.deletefile(link)
-	LOGGER.info(f"DeleteFileCmd : {msg}")
+	LOGGER.info(f"DeleteFileCmd: {msg}")
 	reply_message = sendMessage(msg, context.bot, update)
 
 	threading.Thread(target=auto_delete_message, args=(context.bot, update.message, reply_message)).start()

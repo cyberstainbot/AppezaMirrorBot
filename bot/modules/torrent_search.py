@@ -18,10 +18,11 @@ from pyrogram.parser import html as pyrogram_html
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.handlers import MessageHandler, CallbackQueryHandler
 
-from bot import app, dispatcher, IMAGE_URL
+from bot import app, dispatcher, bot
 from bot.helper import custom_filters
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.filters import CustomFilters
+from bot.helper.telegram_helper.message_utils import sendMessage
 
 search_lock = asyncio.Lock()
 search_info = {False: dict(), True: dict()}
@@ -50,11 +51,11 @@ async def return_search(query, page=1, sukebei=False):
                 if splitted.scheme == 'magnet' and splitted.query:
                     link = f'<code>{link}</code>'
                 newtext = f'''<b>{a + 1}.</b> <code>{html.escape(i["title"])}</code>
-<b>🌐 Link:</b> <code>{link}</code>
-<b>💾 Size:</b> <code>{i["nyaa_size"]}</code>
-<b>🔄 Seeders:</b> <code>{i["nyaa_seeders"]}</code>
-<b>🧲 Leechers:</b> <code>{i["nyaa_leechers"]}</code>
-<b>📝 Category:</b> <code>{i["nyaa_category"]}</code>\n\n'''
+<b>Link:</b> <code>{link}</code>
+<b>Size:</b> <code>{i["nyaa_size"]}</code>
+<b>Seeders:</b> <code>{i["nyaa_seeders"]}</code>
+<b>Leechers:</b> <code>{i["nyaa_leechers"]}</code>
+<b>Category:</b> <code>{i["nyaa_category"]}</code>\n\n'''
                 futtext = text + newtext
                 if (a and not a % 10) or len((await parser.parse(futtext))['message']) > 4096:
                     results.append(text)
@@ -69,17 +70,17 @@ async def return_search(query, page=1, sukebei=False):
         except IndexError:
             return '', len(results), ttl
 
-message_info = dict()
+message_info = {}
 ignore = set()
 
-@app.on_message(filters.command(['nyaasi']))
+@app.on_message(filters.command(['nyaasi', f'nyaasi@{bot.username}']))
 async def nyaa_search(client, message):
     text = message.text.split(' ')
     text.pop(0)
     query = ' '.join(text)
     await init_search(client, message, query, False)
 
-@app.on_message(filters.command(['sukebei']))
+@app.on_message(filters.command(['sukebei', f'sukebei@{bot.username}']))
 async def nyaa_search_sukebei(client, message):
     text = message.text.split(' ')
     text.pop(0)
@@ -91,7 +92,11 @@ async def init_search(client, message, query, sukebei):
     if not result:
         await message.reply_text('No results found')
     else:
-        buttons = [InlineKeyboardButton(f'1/{pages}', 'nyaa_nop'), InlineKeyboardButton(f'Next', 'nyaa_next')]
+        buttons = [
+            InlineKeyboardButton(f'1/{pages}', 'nyaa_nop'),
+            InlineKeyboardButton('Next', 'nyaa_next'),
+        ]
+
         if pages == 1:
             buttons.pop()
         reply = await message.reply_text(result, reply_markup=InlineKeyboardMarkup([
@@ -131,7 +136,12 @@ async def nyaa_callback(client, callback_query):
                 await callback_query.answer('...no', cache_time=3600)
                 return
             text, pages, ttl = await return_search(query, current_page, sukebei)
-        buttons = [InlineKeyboardButton(f'Prev', 'nyaa_back'), InlineKeyboardButton(f'{current_page}/{pages}', 'nyaa_nop'), InlineKeyboardButton(f'Next', 'nyaa_next')]
+        buttons = [
+            InlineKeyboardButton('Prev', 'nyaa_back'),
+            InlineKeyboardButton(f'{current_page}/{pages}', 'nyaa_nop'),
+            InlineKeyboardButton('Next', 'nyaa_next'),
+        ]
+
         if ttl_ended:
             buttons = [InlineKeyboardButton('Search Expired', 'nyaa_nop')]
         else:
@@ -166,7 +176,7 @@ class TorrentSearch:
         self.source = source.rstrip('/')
         self.RESULT_STR = result_str
 
-        app.add_handler(MessageHandler(self.find, filters.command([command])))
+        app.add_handler(MessageHandler(self.find, filters.command([command, f'{self.command}@{bot.username}'])))
         app.add_handler(CallbackQueryHandler(self.previous, filters.regex(f"{self.command}_previous")))
         app.add_handler(CallbackQueryHandler(self.delete, filters.regex(f"{self.command}_delete")))
         app.add_handler(CallbackQueryHandler(self.next, filters.regex(f"{self.command}_next")))
@@ -195,9 +205,12 @@ class TorrentSearch:
         return string
 
     async def update_message(self):
-        prevBtn = InlineKeyboardButton(f"Prev", callback_data=f"{self.command}_previous")
+        prevBtn = InlineKeyboardButton(
+            'Prev', callback_data=f"{self.command}_previous"
+        )
+
         delBtn = InlineKeyboardButton(f"{emoji.CROSS_MARK}", callback_data=f"{self.command}_delete")
-        nextBtn = InlineKeyboardButton(f"Next", callback_data=f"{self.command}_next")
+        nextBtn = InlineKeyboardButton('Next', callback_data=f"{self.command}_next")
 
         inline = []
         if (self.index != 0):
@@ -228,7 +241,7 @@ class TorrentSearch:
         self.message = await message.reply_text("Searching")
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(f"{self.source}/{query}") as resp:
+                async with session.get(f"{self.source}/{query}", timeout=15) as resp:
                     if (resp.status != 200):
                         raise Exception('unsuccessful request')
                     result = await resp.json()
@@ -302,23 +315,27 @@ RESULT_STR_ALL = (
     "➲Seeders: {Seeders} || ➲Leechers: {Leechers}"
 )
 
+TORRENT_API = 'https://api.linkstore.eu.org/api'
+
 torrents_dict = {
-    '1337x': {'source': "https://slam-api.herokuapp.com/api/1337x/", 'result_str': RESULT_STR_1337},
-    'piratebay': {'source': "https://slam-api.herokuapp.com/api/piratebay/", 'result_str': RESULT_STR_PIRATEBAY},
-    'tgx': {'source': "https://slam-api.herokuapp.com/api/tgx/", 'result_str': RESULT_STR_TGX},
-    'yts': {'source': "https://slam-api.herokuapp.com/api/yts/", 'result_str': RESULT_STR_YTS},
-    'eztv': {'source': "https://slam-api.herokuapp.com/api/eztv/", 'result_str': RESULT_STR_EZTV},
-    'torlock': {'source': "https://slam-api.herokuapp.com/api/torlock/", 'result_str': RESULT_STR_TORLOCK},
-    'rarbg': {'source': "https://slam-api.herokuapp.com/api/rarbg/", 'result_str': RESULT_STR_RARBG},
-    'ts': {'source': "https://slam-api.herokuapp.com/api/all/", 'result_str': RESULT_STR_ALL}
+    '1337x': {'source': f"{TORRENT_API}/1337x/", 'result_str': RESULT_STR_1337},
+    'piratebay': {'source': f"{TORRENT_API}/piratebay/", 'result_str': RESULT_STR_PIRATEBAY},
+    'tgx': {'source': f"{TORRENT_API}/tgx/", 'result_str': RESULT_STR_TGX},
+    'yts': {'source': f"{TORRENT_API}/yts/", 'result_str': RESULT_STR_YTS},
+    'eztv': {'source': f"{TORRENT_API}/eztv/", 'result_str': RESULT_STR_EZTV},
+    'torlock': {'source': f"{TORRENT_API}/torlock/", 'result_str': RESULT_STR_TORLOCK},
+    'rarbg': {'source': f"{TORRENT_API}/rarbg/", 'result_str': RESULT_STR_RARBG},
+    'ts': {'source': f"{TORRENT_API}/all/", 'result_str': RESULT_STR_ALL}
 }
 
-torrent_handlers = []
-for command, value in torrents_dict.items():
-    torrent_handlers.append(TorrentSearch(command, value['source'], value['result_str']))
+torrent_handlers = [
+    TorrentSearch(command, value['source'], value['result_str'])
+    for command, value in torrents_dict.items()
+]
 
 def searchhelp(update, context):
     help_string = '''
+<b>Torrent Search</b>
 • /nyaasi <i>[search query]</i>
 • /sukebei <i>[search query]</i>
 • /1337x <i>[search query]</i>
@@ -330,7 +347,7 @@ def searchhelp(update, context):
 • /rarbg <i>[search query]</i>
 • /ts <i>[search query]</i>
 '''
-    update.effective_message.reply_photo(IMAGE_URL, help_string, parse_mode=ParseMode.HTML)
+    sendMessage(help_string, context.bot, update)
     
     
 SEARCHHELP_HANDLER = CommandHandler(BotCommands.TsHelpCommand, searchhelp, filters=(CustomFilters.authorized_chat | CustomFilters.authorized_user) & CustomFilters.mirror_owner_filter, run_async=True)
