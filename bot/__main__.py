@@ -6,11 +6,6 @@ import asyncio
 from pyrogram import idle
 from sys import executable
 from quoters import Quote
-from datetime import datetime
-from speedtest import Speedtest
-import pytz
-import time
-import threading
 
 from telegram import ParseMode
 from telegram.ext import Filters, InlineQueryHandler, MessageHandler, CommandHandler, CallbackQueryHandler, CallbackContext
@@ -25,15 +20,11 @@ from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_tim
 from .helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper import button_build
 from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, torrent_search, delete, speedtest, count
-now=datetime.now(pytz.timezone(f'{TIMEZONE}'))
-
-IMAGE_X = f"{IMAGE_URL}"
 
 
 def stats(update, context):
     global main
     currentTime = get_readable_time(time.time() - botStartTime)
-    current = now.strftime('📅: %d/%m/%Y\n⏲️: %I:%M:%S %p')
     total, used, free = shutil.disk_usage('.')
     total = get_readable_file_size(total)
     used = get_readable_file_size(used)
