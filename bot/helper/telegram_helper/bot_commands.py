@@ -1,4 +1,5 @@
 import os
+from bot import BOT_NO
 
 def getCommand(name: str, command: str):
     try:
