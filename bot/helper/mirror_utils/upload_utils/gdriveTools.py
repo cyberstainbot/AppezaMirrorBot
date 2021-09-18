@@ -408,8 +408,8 @@ class GoogleDriveHelper:
                     msg = self.deletefile(durl)
                     LOGGER.info(f"{msg}")
                     return "your clone has been stopped and cloned data has been deleted!", "cancelled"
-                msg += f'<b>🗂️ ꜰɪʟᴇɴᴀᴍᴇ : </b><code>{meta.get("name")}</code>\n<b>Size: </b><code>{get_readable_file_size(self.transferred_size)}</code>'
-                msg += f'\n<b>⚙️ ᴛʏᴘᴇ: </b><code>Folder</code>'
+                msg += f'<b>🗂️ ꜰɪʟᴇɴᴀᴍᴇ : </b><code>{meta.get("name")}</code>\n<b>📦 ꜱɪᴢᴇ : </b><code>{get_readable_file_size(self.transferred_size)}</code>'
+                msg += f'\n<b>⚙️ ᴛʏᴘᴇ : </b><code>Folder</code>'
                 msg += f'\n<b>📚 ꜱᴜʙꜰᴏʟᴅᴇʀꜱ : </b><code>{self.total_folders}</code>'
                 msg += f'\n<b>📁 ꜰɪʟᴇꜱ : </b><code>{self.total_files}</code>'
                 buttons = button_build.ButtonMaker()
@@ -587,8 +587,8 @@ class GoogleDriveHelper:
                     content += f'<b> | <a href="https://telegra.ph/{self.path[nxt_page]}">Next</a></b>'
                     nxt_page += 1
             Telegraph(access_token=telegraph_token).edit_page(path = self.path[prev_page],
-                                 title = 'ᴘʀɪɪɪɪʏᴏ ᴍɪʀʀᴏʀʙᴏᴛ ꜱᴇᴀʀᴄʜ',
-                                 author_name='ᴘʀɪɪɪɪʏᴏ ᴍɪʀʀᴏʀʙᴏᴛ',
+                                 title = '💞 ᴘʀɪɪɪɪʏᴏ ᴍɪʀʀᴏʀʙᴏᴛ ꜱᴇᴀʀᴄʜ',
+                                 author_name='💓 ᴘʀɪɪɪɪʏᴏ ᴍɪʀʀᴏʀʙᴏᴛ',
                                  author_url='https://github.com/PriiiiyoDevs/priiiiyo-mirrorbot',
                                  html_content=content)
         return
@@ -774,8 +774,8 @@ class GoogleDriveHelper:
 
         for content in self.telegraph_content :
             self.path.append(Telegraph(access_token=telegraph_token).create_page(
-                                                    title = 'ᴘʀɪɪɪɪʏᴏ ᴍɪʀʀᴏʀʙᴏᴛ ꜱᴇᴀʀᴄʜ',
-                                                    author_name='ᴘʀɪɪɪɪʏᴏ ᴍɪʀʀᴏʀʙᴏᴛ',
+                                                    title = '💞 ᴘʀɪɪɪɪʏᴏ ᴍɪʀʀᴏʀʙᴏᴛ ꜱᴇᴀʀᴄʜ',
+                                                    author_name='💓 ᴘʀɪɪɪɪʏᴏ ᴍɪʀʀᴏʀʙᴏᴛ',
                                                     author_url='https://github.com/PriiiiyoDevs/priiiiyo-mirrorbot',
                                                     html_content=content
                                                     )['path'])

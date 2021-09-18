@@ -139,11 +139,7 @@ try:
     for chats in schats:
         SUDO_USERS.add(int(chats))
 except:
-    pass
-try:
-    BOT_NO = getConfig('BOT_NO')
-except KeyError:
-    BOT_NO = ""   
+    pass   
 try:
     BOT_TOKEN = getConfig('BOT_TOKEN')
     CHAT_NAME = getConfig('CHAT_NAME')
