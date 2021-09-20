@@ -19,7 +19,8 @@ from bot.helper.telegram_helper.message_utils import *
 from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time
 from .helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper import button_build
-from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, torrent_search, delete, speedtest, count
+from .modules.rssfeeds import rss_init
+from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, torrent_search, delete, speedtest, count, rssfeeds
 
 
 def stats(update, context):
@@ -164,6 +165,8 @@ help_string = f'''
 
 /{BotCommands.ExecHelpCommand}: Get help for Executor module (Only Owner)
 
+/{BotCommands.RssHelpCommand}:  Get help for RSS feeds module
+
 /{BotCommands.TsHelpCommand}: Get help for Torrent search module
 '''
 
@@ -198,6 +201,7 @@ botcmds = [
         (f'{BotCommands.PingCommand}','Ping the Bot'),
         (f'{BotCommands.RestartCommand}','Restart the bot [owner/sudo only]'),
         (f'{BotCommands.LogCommand}','Get the Bot Log [owner/sudo only]'),
+        (f'{BotCommands.RssHelpCommand}','Get help for RSS feeds module'),
         (f'{BotCommands.TsHelpCommand}','Get help for Torrent search module')
     ]
 '''
@@ -241,6 +245,7 @@ def main():
     updater.start_polling(drop_pending_updates=IGNORE_PENDING_REQUESTS)
     LOGGER.info("Bot Started!")
     signal.signal(signal.SIGINT, fs_utils.exit_clean_up)
+    rss_init()
 
 app.start()
 main()

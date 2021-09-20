@@ -183,7 +183,7 @@ if DB_URI is not None:
         conn.close()
 
 LOGGER.info("Generating USER_SESSION_STRING")
-app = Client('Slam', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN)
+app = Client('Priiiiyo', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN)
 
 # Generate Telegraph Token
 sname = ''.join(random.SystemRandom().choices(string.ascii_letters, k=8))
@@ -320,6 +320,13 @@ try:
     IGNORE_PENDING_REQUESTS = IGNORE_PENDING_REQUESTS.lower() == 'true'
 except KeyError:
     IGNORE_PENDING_REQUESTS = False
+try:
+    CHAT_ID = getConfig('CHAT_ID')
+    DELAY = int(getConfig('DELAY'))
+    INIT_FEEDS = getConfig('INIT_FEEDS')
+    CUSTOM_MESSAGES = getConfig('CUSTOM_MESSAGES')        
+except:
+    pass 
 try:
     BASE_URL = getConfig('BASE_URL_OF_BOT')
     if len(BASE_URL) == 0:
