@@ -35,6 +35,16 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 LOGGER = logging.getLogger(__name__)
 
+NETRC_FILE_URL = os.environ.get('NETRC_FILE_URL', None)
+if NETRC_FILE_URL is not None:
+    res = requests.get(NETRC_FILE_URL)
+    if res.status_code == 200:
+        with open('.netrc', 'wb+') as f:
+            f.write(res.content)
+            f.close()
+    else:
+        logging.error(res.status_code)
+
 CONFIG_FILE_URL = os.environ.get('CONFIG_FILE_URL', None)
 if CONFIG_FILE_URL is not None:
     res = requests.get(CONFIG_FILE_URL)
@@ -108,12 +118,16 @@ BOT_NO = ""
 
 download_dict_lock = threading.Lock()
 status_reply_dict_lock = threading.Lock()
+search_dict_lock = threading.Lock()
 # Key: update.effective_chat.id
 # Value: telegram.Message
 status_reply_dict = {}
 # Key: update.message.message_id
 # Value: An object of Status
 download_dict = {}
+# key: search_id
+# Value: client, search_results, total_results, total_pages, pageNo, start
+search_dict = {}
 # Stores list of users and chats the bot is authorized to use in
 AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
@@ -363,6 +377,17 @@ try:
     AS_DOCUMENT = AS_DOCUMENT.lower() == 'true'
 except KeyError:
     AS_DOCUMENT = False
+try:
+    EQUAL_SPLITS = getConfig('EQUAL_SPLITS')
+    EQUAL_SPLITS = EQUAL_SPLITS.lower() == 'true'
+except KeyError:
+    EQUAL_SPLITS = False
+try:
+    CUSTOM_FILENAME = getConfig('CUSTOM_FILENAME')
+    if len(CUSTOM_FILENAME) == 0:
+        raise KeyError
+except KeyError:
+    CUSTOM_FILENAME = None
 try:
     RECURSIVE_SEARCH = getConfig('RECURSIVE_SEARCH')
     RECURSIVE_SEARCH = RECURSIVE_SEARCH.lower() == 'true'

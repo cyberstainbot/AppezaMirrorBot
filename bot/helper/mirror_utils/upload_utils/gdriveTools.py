@@ -961,8 +961,8 @@ class GoogleDriveHelper:
             if self.is_cancelled:
                 break
 
-        @retry(wait=wait_exponential(multiplier=2, min=3, max=6), stop=stop_after_attempt(5),
-               retry=retry_if_exception_type(HttpError), before=before_log(LOGGER, logging.DEBUG))
+    @retry(wait=wait_exponential(multiplier=2, min=3, max=6), stop=stop_after_attempt(5),
+           retry=retry_if_exception_type(HttpError), before=before_log(LOGGER, logging.DEBUG))
     def download_file(self, file_id, path, filename, mime_type):
         request = self.__service.files().get_media(fileId=file_id)
         filename = filename.replace('/', '')

@@ -1,4 +1,4 @@
-[![Priiiiyo](https://telegra.ph/file/b5d9a2910d65ce0596f59.jpg)](https://t.me/priiiiyo)
+[![Priiiiyo](https://telegra.ph/file/a19ce00c6a38e3f415d8a.jpg)](https://t.me/PriiiiyoMirrorLeechUpdates)
 
 # Priiiiyo Mirror Leech Bot
 ![GitHub Repo stars](https://img.shields.io/github/stars/PriiiiyoDevs/priiiiyo-mirror-leech-bot?color=blue&style=flat)
@@ -11,12 +11,10 @@
 **Priiiiyo Mirror Leech Bot** is a _multipurpose_ Telegram Bot written in Python for mirroring files on the Internet to our beloved Google Drive. Based on [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
 
 # Features:
-<details>
-    <summary><b>Click Here For More Details</b></summary>
 
-## By Priiiiyo Devs
+## By PriiiiyoDevs
 - qBittorrent
-- RSS feed reader
+- Rss feed reader
 - Select files from Torrent before downloading using qbittorrent
 - Leech (splitting, thumbnail for each user, setting as document or as media for each user)
 - Size limiting for Torrent/Direct, Zip/Unzip, Mega and Clone
@@ -80,7 +78,7 @@ Deploying is pretty much straight forward and is divided into several steps as f
 
 - Clone this repo:
 ```
-git clone https://github.com/PriiiiyoDevs/priiiiyo-mirror-leech-bot mirrorbot/ && cd mirrorbot
+git clone https://github.com/anasty17/mirror-leech-telegram-bot mirrorbot/ && cd mirrorbot
 ```
 
 - Install requirements
@@ -374,6 +372,7 @@ For Index Link with only password without username, even http auth will not work
 machine example.workers.dev password index_password
 ```
 Where host is the name of extractor (eg. Youtube, Twitch). Multiple accounts of different hosts can be added each separated by a new line.
+
 
 # Credits
 

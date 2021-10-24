@@ -270,7 +270,7 @@ def new_thread(fn):
     return wrapper
 
 
-next_handler = CallbackQueryHandler(flip, pattern="nex", run_async=True)
-previous_handler = CallbackQueryHandler(flip, pattern="pre", run_async=True)
+next_handler = CallbackQueryHandler(turn, pattern="nex", run_async=True)
+previous_handler = CallbackQueryHandler(turn, pattern="pre", run_async=True)
 dispatcher.add_handler(next_handler)
 dispatcher.add_handler(previous_handler)

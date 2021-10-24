@@ -23,6 +23,7 @@ python-dotenv
 python-magic
 python-telegram-bot
 qbittorrent-api
+quoters
 requests
 speedtest-cli
 telegraph
