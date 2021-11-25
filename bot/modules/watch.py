@@ -9,7 +9,7 @@ from bot.helper.telegram_helper.filters import CustomFilters
 import threading
 
 
-def _watch(bot: Bot, update, isTar=False, isZip=False, isLeech=False):
+def _watch(bot: Bot, update, isZip=False, isLeech=False):
     mssg = update.message.text
     message_args = mssg.split(' ')
     name_args = mssg.split('|')
@@ -20,8 +20,8 @@ def _watch(bot: Bot, update, isTar=False, isZip=False, isLeech=False):
         msg = f"/{BotCommands.WatchCommand} [youtube-dl supported link] [quality] |[CustomName] to mirror with youtube-dl.\n\n"
         msg += "<b>Note: Quality and custom name are optional</b>\n\nExample of quality: audio, 144, 240, 360, 480, 720, 1080, 2160."
         msg += "\n\nIf you want to use custom filename, enter it after |"
-        msg += f"\n\nExample:\n<code>/{BotCommands.WatchCommand} https://youtu.be/Pk_TthHfLeE 720 |Priiiiyo</code>\n\n"
-        msg += "This file will be downloaded in 720p quality and it's name will be <b>Priiiiyo</b>"
+        msg += f"\n\nExample:\n/{BotCommands.WatchCommand} https://youtu.be/Pk_TthHfLeE 720 |video.mp4\n\n"
+        msg += "This file will be downloaded in 720p quality and it's name will be <b>video.mp4</b>"
         sendMessage(msg, bot, update)
         return
     
@@ -44,7 +44,7 @@ def _watch(bot: Bot, update, isTar=False, isZip=False, isLeech=False):
       name = ""
     
     pswd = ""
-    listener = MirrorListener(bot, update, pswd, isTar, isZip=isZip)
+    listener = MirrorListener(bot, update, pswd, isZip, isLeech=isLeech)
     ydl = YoutubeDLHelper(listener)
     threading.Thread(target=ydl.add_download,args=(link, f'{DOWNLOAD_DIR}{listener.uid}', qual, name)).start()
     sendStatusMessage(update, bot)
@@ -53,13 +53,13 @@ def watch(update, context):
     _watch(context.bot, update)
 
 def watchZip(update, context):
-    _watch(context.bot, update, True, True)
+    _watch(context.bot, update, True)
 
 def leechWatch(update, context):
     _watch(context.bot, update, isLeech=True)
 
 def leechWatchZip(update, context):
-    _watch(context.bot, update, True, True, True)
+    _watch(context.bot, update, True, True)
 
 watch_handler = CommandHandler(BotCommands.WatchCommand, watch,
                                 filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
