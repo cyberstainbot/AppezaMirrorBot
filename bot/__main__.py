@@ -7,7 +7,7 @@ from pyrogram import idle
 from sys import executable
 from quoters import Quote
 
-from telegram import ParseMode
+from telegram import ParseMode, InlineKeyboardButton
 from telegram.ext import Filters, InlineQueryHandler, MessageHandler, CommandHandler, CallbackQueryHandler, CallbackContext
 from telegram.utils.helpers import escape_markdown
 from telegraph import Telegraph
