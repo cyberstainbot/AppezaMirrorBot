@@ -47,27 +47,27 @@ def stats(update, context):
     mem_t = get_readable_file_size(memory.total)
     mem_a = get_readable_file_size(memory.available)
     mem_u = get_readable_file_size(memory.used)
-    stats = f'▶ Rᴜɴɴɪɴɢ Sɪɴᴄᴇ ▶ : {currentTime}\n' \
-            f'<b>DISK INFO</b>\n' \
-            f'<b>𝖳𝖮𝖳𝖠𝖫</b> : {total}\n' \
-            f'<b>𝖴𝖲𝖤𝖣</b> : {used} ~ ' \
-            f'<b>𝖥𝖱𝖤𝖤</b> : {free}\n\n' \
-            f'<b>DATA USAGE</b>\n' \
-            f'<b>UL</b> : {sent} ~ ' \
-            f'<b>DL</b> : {recv}\n\n' \
-            f'<b>SERVER STATS</b>\n' \
-            f'<b>CPU</b> : {cpuUsage}%\n' \
-            f'<b>𝖱𝖠𝖬</b> : {memory}%\n' \
-            f'<b>DISK</b> : {disk}%\n' \
+    stats = f'▶ 𝖱𝖴𝖭𝖭𝖨𝖭𝖦 𝖲𝖨𝖭𝖢𝖤 ▶ : {currentTime}\n' \
+            f'<b>ᴅɪꜱᴋ ɪɴꜰᴏ</b>\n' \
+            f'<b>ᴛᴏᴛᴀʟ</b> : {total}\n' \
+            f'<b>ᴜꜱᴇᴅ</b> : {used} ~ ' \
+            f'<b>ꜰʀᴇᴇ</b> : {free}\n\n' \
+            f'<b>𝖣𝖠𝖳𝖠 𝖴𝖲𝖠𝖦𝖤</b>\n' \
+            f'<b>ᴜʟ</b> : {sent} ~ ' \
+            f'<b>ᴅʟ</b> : {recv}\n\n' \
+            f'<b>𝖲𝖤𝖱𝖵𝖤𝖱 𝖲𝖳𝖠𝖳𝖲</b>\n' \
+            f'<b>ᴄᴘᴜ</b> : {cpuUsage}%\n' \
+            f'<b>ʀᴀᴍ</b> : {memory}%\n' \
+            f'<b>ᴅɪꜱᴋ</b> : {disk}%\n\n' \
             f'<b>𝖢𝖮𝖱𝖤𝖲</b>\n' \
-            f'<b>𝖯𝖧𝖸𝖲𝖨𝖢𝖠𝖫 𝖢𝖮𝖱𝖤𝖲</b> : {p_core}\n' \
-            f'<b>𝖳𝖮𝖳𝖠𝖫 𝖢𝖮𝖱𝖤𝖲</b> : {t_core}\n\n' \
-            f'<b>𝖲𝖶𝖠𝖯</b> : {swap_t}\n' \
-            f'<b>𝖴𝖲𝖤𝖣</b> : {swap_p}\n' \
+            f'<b>ᴘʜʏꜱɪᴄᴀʟ ᴄᴏʀᴇꜱ</b> : {p_core}\n' \
+            f'<b>ᴛᴏᴛᴀʟ ᴄᴏʀᴇꜱ</b> : {t_core}\n\n' \
+            f'<b>ꜱᴡᴀᴘ</b> : {swap_t}\n' \
+            f'<b>ᴜꜱᴇᴅ</b> : {swap_p}\n\n' \
             f'<b>𝖬𝖤𝖬𝖮𝖱𝖸</b>\n' \
-            f'<b>𝖬𝖤𝖬𝖮𝖱𝖸 𝖳𝖮𝖳𝖠𝖫</b> : {mem_t}\n' \
-            f'<b>𝖬𝖤𝖬𝖮𝖱𝖸 𝖥𝖱𝖤𝖤</b> : {mem_a}\n' \
-            f'<b>𝖬𝖤𝖬𝖮𝖱𝖸 𝖴𝖲𝖤𝖣</b> : {mem_u}\n'         
+            f'<b>ᴍᴇᴍᴏʀʏ ᴛᴏᴛᴀʟ</b> : {mem_t}\n' \
+            f'<b>ᴍᴇᴍᴏʀʏ ꜰʀᴇᴇ</b> : {mem_a}\n' \
+            f'<b>ᴍᴇᴍᴏʀʏ ᴜꜱᴇᴅ</b> : {mem_u}\n'         
     keyboard = [[InlineKeyboardButton("CLOSE", callback_data="stats_close")]]
     main = sendMarkup(stats, context.bot, update, reply_markup=InlineKeyboardMarkup(keyboard))
 
