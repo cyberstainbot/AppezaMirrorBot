@@ -29,8 +29,7 @@ def start_cleanup():
 
 def clean_all():
     aria2.remove_all(True)
-    get_client().torrents_delete(torrent_hashes="all", delete_files=True)
-    get_client().auth_log_out()
+    get_client().torrents_delete(torrent_hashes="all")
     try:
         shutil.rmtree(DOWNLOAD_DIR)
     except FileNotFoundError:
@@ -68,79 +67,79 @@ def tar(org_path):
 
 def get_base_name(orig_path: str):
     if orig_path.endswith(".tar.bz2"):
-        return orig_path.replace(".tar.bz2", "")
+        return orig_path.rsplit(".tar.bz2", 1)[0]
     elif orig_path.endswith(".tar.gz"):
-        return orig_path.replace(".tar.gz", "")
+        return orig_path.rsplit(".tar.gz", 1)[0]
     elif orig_path.endswith(".bz2"):
-        return orig_path.replace(".bz2", "")
+        return orig_path.rsplit(".bz2", 1)[0]
     elif orig_path.endswith(".gz"):
-        return orig_path.replace(".gz", "")
+        return orig_path.rsplit(".gz", 1)[0]
     elif orig_path.endswith(".tar.xz"):
-        return orig_path.replace(".tar.xz", "")
+        return orig_path.rsplit(".tar.xz", 1)[0]
     elif orig_path.endswith(".tar"):
-        return orig_path.replace(".tar", "")
+        return orig_path.rsplit(".tar", 1)[0]
     elif orig_path.endswith(".tbz2"):
-        return orig_path.replace("tbz2", "")
+        return orig_path.rsplit("tbz2", 1)[0]
     elif orig_path.endswith(".tgz"):
-        return orig_path.replace(".tgz", "")
+        return orig_path.rsplit(".tgz", 1)[0]
     elif orig_path.endswith(".zip"):
-        return orig_path.replace(".zip", "")
+        return orig_path.rsplit(".zip", 1)[0]
     elif orig_path.endswith(".7z"):
-        return orig_path.replace(".7z", "")
+        return orig_path.rsplit(".7z", 1)[0]
     elif orig_path.endswith(".Z"):
-        return orig_path.replace(".Z", "")
+        return orig_path.rsplit(".Z", 1)[0]
     elif orig_path.endswith(".rar"):
-        return orig_path.replace(".rar", "")
+        return orig_path.rsplit(".rar", 1)[0]
     elif orig_path.endswith(".iso"):
-        return orig_path.replace(".iso", "")
+        return orig_path.rsplit(".iso", 1)[0]
     elif orig_path.endswith(".wim"):
-        return orig_path.replace(".wim", "")
+        return orig_path.rsplit(".wim", 1)[0]
     elif orig_path.endswith(".cab"):
-        return orig_path.replace(".cab", "")
+        return orig_path.rsplit(".cab", 1)[0]
     elif orig_path.endswith(".apm"):
-        return orig_path.replace(".apm", "")
+        return orig_path.rsplit(".apm", 1)[0]
     elif orig_path.endswith(".arj"):
-        return orig_path.replace(".arj", "")
+        return orig_path.rsplit(".arj", 1)[0]
     elif orig_path.endswith(".chm"):
-        return orig_path.replace(".chm", "")
+        return orig_path.rsplit(".chm", 1)[0]
     elif orig_path.endswith(".cpio"):
-        return orig_path.replace(".cpio", "")
+        return orig_path.rsplit(".cpio", 1)[0]
     elif orig_path.endswith(".cramfs"):
-        return orig_path.replace(".cramfs", "")
+        return orig_path.rsplit(".cramfs", 1)[0]
     elif orig_path.endswith(".deb"):
-        return orig_path.replace(".deb", "")
+        return orig_path.rsplit(".deb", 1)[0]
     elif orig_path.endswith(".dmg"):
-        return orig_path.replace(".dmg", "")
+        return orig_path.rsplit(".dmg", 1)[0]
     elif orig_path.endswith(".fat"):
-        return orig_path.replace(".fat", "")
+        return orig_path.rsplit(".fat", 1)[0]
     elif orig_path.endswith(".hfs"):
-        return orig_path.replace(".hfs", "")
+        return orig_path.rsplit(".hfs", 1)[0]
     elif orig_path.endswith(".lzh"):
-        return orig_path.replace(".lzh", "")
+        return orig_path.rsplit(".lzh", 1)[0]
     elif orig_path.endswith(".lzma"):
-        return orig_path.replace(".lzma", "")
+        return orig_path.rsplit(".lzma", 1)[0]
     elif orig_path.endswith(".lzma2"):
-        return orig_path.replace(".lzma2", "")
+        return orig_path.rsplit(".lzma2", 1)[0]
     elif orig_path.endswith(".mbr"):
-        return orig_path.replace(".mbr", "")
+        return orig_path.rsplit(".mbr", 1)[0]
     elif orig_path.endswith(".msi"):
-        return orig_path.replace(".msi", "")
+        return orig_path.rsplit(".msi", 1)[0]
     elif orig_path.endswith(".mslz"):
-        return orig_path.replace(".mslz", "")
+        return orig_path.rsplit(".mslz", 1)[0]
     elif orig_path.endswith(".nsis"):
-        return orig_path.replace(".nsis", "")
+        return orig_path.rsplit(".nsis", 1)[0]
     elif orig_path.endswith(".ntfs"):
-        return orig_path.replace(".ntfs", "")
+        return orig_path.rsplit(".ntfs", 1)[0]
     elif orig_path.endswith(".rpm"):
-        return orig_path.replace(".rpm", "")
+        return orig_path.rsplit(".rpm", 1)[0]
     elif orig_path.endswith(".squashfs"):
-        return orig_path.replace(".squashfs", "")
+        return orig_path.rsplit(".squashfs", 1)[0]
     elif orig_path.endswith(".udf"):
-        return orig_path.replace(".udf", "")
+        return orig_path.rsplit(".udf", 1)[0]
     elif orig_path.endswith(".vhd"):
-        return orig_path.replace(".vhd", "")
+        return orig_path.rsplit(".vhd", 1)[0]
     elif orig_path.endswith(".xar"):
-        return orig_path.replace(".xar", "")
+        return orig_path.rsplit(".xar", 1)[0]
     else:
         raise NotSupportedExtractionArchive('File format not supported for extraction')
 
@@ -159,51 +158,50 @@ def take_ss(video_file):
     if duration == 0:
         duration = 3
     duration = duration // 2
-    subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(duration),
-                    "-i", video_file, "-vframes", "1", des_dir])
+    try:
+        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", str(duration),
+                        "-i", video_file, "-vframes", "1", des_dir])
+    except:
+        return None
+
     if not os.path.lexists(des_dir):
         return None
 
-    Image.open(des_dir).convert("RGB").save(des_dir)
-    img = Image.open(des_dir)
-    img.resize((480, 320))
-    img.save(des_dir, "JPEG")
+    Image.open(des_dir).convert("RGB").save(des_dir, "JPEG")
     return des_dir
 
-def split(path, size, filee, dirpath, split_size, start_time=0, i=1):
+def split(path, size, filee, dirpath, split_size, start_time=0, i=1, inLoop=False):
+    parts = math.ceil(size/TG_SPLIT_SIZE)
+    if EQUAL_SPLITS and not inLoop:
+        split_size = math.ceil(size/parts)
     if filee.upper().endswith(VIDEO_SUFFIXES):
         base_name, extension = os.path.splitext(filee)
-        parts = math.ceil(size/TG_SPLIT_SIZE)
-        if EQUAL_SPLITS:
-            split_size = (size // parts) - 2500000
-        else:
-            split_size = split_size - 2500000
+        split_size = split_size - 2500000
         while i <= parts :
-            parted_name = "{}.part{}{}".format(str(base_name), str(i).zfill(3), str(extension))
+            parted_name = "{}_part{}{}".format(str(base_name), str(i).zfill(3), str(extension))
             out_path = os.path.join(dirpath, parted_name)
-            subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", 
+            subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i",
                             path, "-ss", str(start_time), "-fs", str(split_size),
                             "-async", "1", "-strict", "-2", "-c", "copy", out_path])
             out_size = get_path_size(out_path)
             if out_size > 2097152000:
-                dif = out_size - TG_SPLIT_SIZE
+                dif = out_size - 2097152000
                 split_size = split_size - dif + 2400000
                 os.remove(out_path)
-                return split(path, size, filee, dirpath, split_size, start_time, i)
+                return split(path, size, filee, dirpath, split_size, start_time, i, inLoop=True)
             lpd = get_media_info(out_path)[0]
             start_time += lpd - 3
             i = i + 1
     else:
-        out_path = os.path.join(dirpath, filee + ".")
+        out_path = os.path.join(dirpath, filee + "_")
         subprocess.run(["split", "--numeric-suffixes=1", "--suffix-length=3", f"--bytes={split_size}", path, out_path])
 
 def get_media_info(path):
     try:
-        result = subprocess.check_output(["ffprobe", "-hide_banner", "-loglevel", "error", "-print_format", 
+        result = subprocess.check_output(["ffprobe", "-hide_banner", "-loglevel", "error", "-print_format",
                                           "json", "-show_format", path]).decode('utf-8')
         fields = json.loads(result)['format']
     except Exception as e:
-        LOGGER.error(str(e))
         return 0, None, None
     try:
         duration = round(float(fields['duration']))
