@@ -29,6 +29,7 @@ class _BotCommands:
         self.QbZipMirrorCommand = 'qbzipmirror'
         self.DeleteCommand = 'del'
         self.ShellCommand = 'shell'
+        self.TsHelpCommand = 'tshelp'
         self.ExecHelpCommand = 'exechelp'
         self.RssHelpCommand = 'rsshelp'
         self.LeechSetCommand = 'leechset'
