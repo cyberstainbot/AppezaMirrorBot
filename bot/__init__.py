@@ -118,7 +118,6 @@ BOT_NO = ""
 
 download_dict_lock = threading.Lock()
 status_reply_dict_lock = threading.Lock()
-search_dict_lock = threading.Lock()
 # Key: update.effective_chat.id
 # Value: telegram.Message
 status_reply_dict = {}
