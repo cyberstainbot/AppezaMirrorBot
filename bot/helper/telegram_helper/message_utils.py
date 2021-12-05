@@ -21,7 +21,7 @@ def sendMessage(text: str, bot, update: Update):
         return sendMessage(text, bot, update)
     except Exception as e:
         LOGGER.error(str(e))
-        
+
 def sendMarkup(text: str, bot, update: Update, reply_markup: InlineKeyboardMarkup):
     try:
         return bot.send_message(update.message.chat_id,
@@ -47,7 +47,6 @@ def editMessage(text: str, message: Message, reply_markup=None):
     except Exception as e:
         LOGGER.error(str(e))
 
-
 def deleteMessage(bot, message: Message):
     try:
         bot.delete_message(chat_id=message.chat.id,
@@ -55,13 +54,11 @@ def deleteMessage(bot, message: Message):
     except Exception as e:
         LOGGER.error(str(e))
 
-
 def sendLogFile(bot, update: Update):
     with open('log.txt', 'rb') as f:
         bot.send_document(document=f, filename=f.name,
                           reply_to_message_id=update.message.message_id,
                           chat_id=update.message.chat_id)
-
 
 def auto_delete_message(bot, cmd_message: Message, bot_message: Message):
     if AUTO_DELETE_MESSAGE_DURATION != -1:
@@ -73,7 +70,6 @@ def auto_delete_message(bot, cmd_message: Message, bot_message: Message):
         except AttributeError:
             pass
 
-
 def delete_all_messages():
     with status_reply_dict_lock:
         for message in list(status_reply_dict.values()):
@@ -82,7 +78,6 @@ def delete_all_messages():
                 del status_reply_dict[message.chat.id]
             except Exception as e:
                 LOGGER.error(str(e))
-
 
 def update_all_messages():
     msg, buttons = get_readable_message()
@@ -94,7 +89,6 @@ def update_all_messages():
                 else:
                     editMessage(msg, status_reply_dict[chat_id], buttons)
                 status_reply_dict[chat_id].text = msg
-
 
 def sendStatusMessage(msg, bot):
     if len(Interval) == 0:
