@@ -59,13 +59,15 @@ def stats(update, context):
             f'<b><i>CPU</i></b>: {cpuUsage}%\n' \
             f'<b><i>𝖱𝖠𝖬</i></b>: {memory}%\n' \
             f'<b><i>DISK</i></b>: {disk}%\n' \
-            f'<b><i>𝖯𝖧𝖸𝖲𝖨𝖢𝖠𝖫 𝖢𝖮𝖱𝖤𝖲<i></b>: {p_core}\n'\
+            f'<b>𝖢𝖮𝖱𝖤𝖲</b>\n' \
+            f'<b><i>𝖯𝖧𝖸𝖲𝖨𝖢𝖠𝖫 𝖢𝖮𝖱𝖤𝖲</i></b>: {p_core}\n'\
             f'<b><i>𝖳𝖮𝖳𝖠𝖫 𝖢𝖮𝖱𝖤𝖲<i></b>: {t_core}\n\n'\
-            f'<b>𝖲𝖶𝖠𝖯:</b> {swap_t} | <b>𝖴𝖲𝖤𝖣:</b> {swap_p}%\n'\
+            f'<b><i>𝖲𝖶𝖠𝖯</i></b>: {swap_t}\n' \
+            f'<b><i>𝖴𝖲𝖤𝖣</i></b>: {swap_p}%\n' \
             f'<b>𝖬𝖤𝖬𝖮𝖱𝖸</b>\n' \
-            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖳𝖮𝖳𝖠𝖫<i></b>: {mem_t}\n'\
-            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖥𝖱𝖤𝖤<i></b>: {mem_a}\n'\
-            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖴𝖲𝖤𝖣<i></b>: {mem_u}\n'         
+            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖳𝖮𝖳𝖠𝖫</i></b>: {mem_t}\n' \
+            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖥𝖱𝖤𝖤</i></b>: {mem_a}\n' \
+            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖴𝖲𝖤𝖣</i></b>: {mem_u}\n'         
     keyboard = [[InlineKeyboardButton("CLOSE", callback_data="stats_close")]]
     main = sendMarkup(stats, context.bot, update, reply_markup=InlineKeyboardMarkup(keyboard))
 
