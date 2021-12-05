@@ -7,7 +7,7 @@ import subprocess
 
 from pyrogram import idle
 from sys import executable
-from telegram import ParseMode, InlineKeyboardMarkup
+from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CommandHandler
 from quoters import Quote
 
@@ -22,7 +22,7 @@ from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_tim
 from .helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper import button_build
 from .modules.rssfeeds import rss_init
-from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, shell, eval, delete, speedtest, count, leech_settings, search, rssfeeds
+from .modules import authorize, cancel_mirror, clone, count, delete, eval, leech_settings, list, mirror, mirror_status, rssfeeds, search, shell, speedtest, torrent_search, watch 
 
 
 def stats(update, context):
