@@ -30,8 +30,6 @@ class _BotCommands:
         self.DeleteCommand = 'del'
         self.ShellCommand = 'shell'
         self.ExecHelpCommand = 'exechelp'
-        self.TsHelpCommand = 'tshelp'
-        self.RssHelpCommand = 'rsshelp'
         self.LeechSetCommand = 'leechset'
         self.SetThumbCommand = 'setthumb'
         self.LeechCommand = 'leech'
