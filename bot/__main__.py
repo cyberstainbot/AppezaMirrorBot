@@ -216,7 +216,7 @@ def bot_help(update, context):
     button.buildbutton("Other Commands", f"https://telegra.ph/{help}")
     reply_markup = InlineKeyboardMarkup(button.build_menu(1))
     sendMarkup(help_string, context.bot, update, reply_markup)
-
+'''
 botcmds = [
 
         (f'{BotCommands.MirrorCommand}', 'Mirror'),
@@ -250,7 +250,7 @@ botcmds = [
         (f'{BotCommands.LogCommand}','Get the bot Log'),
         (f'{BotCommands.HelpCommand}','Get detailed help')
     ]
-
+'''
 def main():
     # bot.set_my_commands(botcmds)
     fs_utils.start_cleanup()
