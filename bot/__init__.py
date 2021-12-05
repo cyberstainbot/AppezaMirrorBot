@@ -125,9 +125,6 @@ status_reply_dict = {}
 # Key: update.message.message_id
 # Value: An object of Status
 download_dict = {}
-# key: search_id
-# Value: client, search_results, total_results, total_pages, pageNo, start
-search_dict = {}
 # Stores list of users and chats the bot is authorized to use in
 AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
