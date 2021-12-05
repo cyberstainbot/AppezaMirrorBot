@@ -11,7 +11,6 @@ from telegram import InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler
 from bot.helper.telegram_helper import button_build, message_utils
 
-
 MAGNET_REGEX = r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*"
 
 URL_REGEX = r"(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+"
@@ -29,12 +28,8 @@ class MirrorStatus:
     STATUS_PAUSE = "ᴘᴀᴜꜱᴇᴅ...⭕"
     STATUS_ARCHIVING = "ᴀʀᴄʜɪᴠɪɴɢ...🔐"
     STATUS_EXTRACTING = "ᴇxᴛʀᴀᴄᴛɪɴɢ...📂"
-    STATUS_SPLITTING = "Splitting...✂️"
-    STATUS_CHECKING = "CheckingUp...📝"
-
-
-PROGRESS_MAX_SIZE = 100 // 8
-PROGRESS_INCOMPLETE = ['▏', '▎', '▍', '▌', '▋', '▊', '▉']
+    STATUS_SPLITTING = "ꜱᴘʟɪᴛᴛɪɴɢ...✂️"
+    STATUS_CHECKING = "ᴄʜᴇᴄᴋɪɴɢᴜᴘ...📝"
 
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
@@ -148,19 +143,19 @@ def get_readable_message():
                  else:
                      msg += f"\n<b>📤 ᴜᴘʟᴏᴀᴅᴇᴅ :</b> {get_readable_file_size(download.processed_bytes())}<b>\n<b>⚙️ Engine: ʀᴄʟᴏɴᴇ</b>\n💾 Size</b>: {download.size()}"
                  msg += f"\n<b>⚡ ꜱᴘᴇᴇᴅ :</b> {download.speed()}" \
-                            f"\n<b>⏲️ ᴇᴛᴀ :</b> {download.eta()} "
+                        f"\n<b>⏲️ ᴇᴛᴀ :</b> {download.eta()} "
                  # if hasattr(download, 'is_torrent'):
                  try:
                      msg += f"\n<b>👥 ᴜꜱᴇʀ :</b> <b>{download.message.from_user.first_name}</b>\n<b>⚠️ Warn:</b><code>/warn {download.message.from_user.id}</code>"
                  except:
-                        pass
+                     pass
                  try:
                      msg += f"\n<b>⚙️ ᴇɴɢɪɴᴇ : Aria2</b>\n<b>📶:</b> {download.aria_download().connections}"
                  except:
                      pass
                  try:
                      msg += f"\n<b>🌱 ꜱᴇᴇᴅᴇʀꜱ :</b> <code>{download.aria_download().num_seeders}</code>" \
-                                f"\n<b>✳️ ᴘᴇᴇʀꜱ :</b> <code>{download.aria_download().connections}</code>"
+                            f"\n<b>✳️ ᴘᴇᴇʀꜱ :</b> <code>{download.aria_download().connections}</code>"
                  except:
                      pass
                  try:
