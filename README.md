@@ -12,7 +12,7 @@
 
 # Features:
 
-## By [PriiiiyoDevs]((https://github.com/PriiiiyoDevs)
+## By [PriiiiyoDevs](https://github.com/PriiiiyoDevs)
 - qBittorrent
 - Rss feed reader
 - Select files from Torrent before downloading using qbittorrent
