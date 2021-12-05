@@ -49,25 +49,25 @@ def stats(update, context):
     mem_u = get_readable_file_size(memory.used)
     stats = f'▶ Rᴜɴɴɪɴɢ Sɪɴᴄᴇ ▶ : {currentTime}\n' \
             f'<b>DISK INFO</b>\n' \
-            f'<b><i>𝖳𝖮𝖳𝖠𝖫</i></b>: {total}\n' \
-            f'<b><i>𝖴𝖲𝖤𝖣</i></b>: {used} ~ ' \
-            f'<b><i>𝖥𝖱𝖤𝖤</i></b>: {free}\n\n' \
+            f'<b>𝖳𝖮𝖳𝖠𝖫</b> : {total}\n' \
+            f'<b>𝖴𝖲𝖤𝖣</b> : {used} ~ ' \
+            f'<b>𝖥𝖱𝖤𝖤</b> : {free}\n\n' \
             f'<b>DATA USAGE</b>\n' \
-            f'<b><i>UL</i></b>: {sent} ~ ' \
-            f'<b><i>DL</i></b>: {recv}\n\n' \
+            f'<b>UL</b> : {sent} ~ ' \
+            f'<b>DL</b> : {recv}\n\n' \
             f'<b>SERVER STATS</b>\n' \
-            f'<b><i>CPU</i></b>: {cpuUsage}%\n' \
-            f'<b><i>𝖱𝖠𝖬</i></b>: {memory}%\n' \
-            f'<b><i>DISK</i></b>: {disk}%\n' \
+            f'<b>CPU</b> : {cpuUsage}%\n' \
+            f'<b>𝖱𝖠𝖬</b> : {memory}%\n' \
+            f'<b>DISK</b> : {disk}%\n' \
             f'<b>𝖢𝖮𝖱𝖤𝖲</b>\n' \
-            f'<b><i>𝖯𝖧𝖸𝖲𝖨𝖢𝖠𝖫 𝖢𝖮𝖱𝖤𝖲</i></b>: {p_core}\n' \
-            f'<b><i>𝖳𝖮𝖳𝖠𝖫 𝖢𝖮𝖱𝖤𝖲</i></b>: {t_core}\n\n' \
-            f'<b><i>𝖲𝖶𝖠𝖯</i></b>: {swap_t}\n' \
-            f'<b><i>𝖴𝖲𝖤𝖣</i></b>: {swap_p}\n' \
+            f'<b>𝖯𝖧𝖸𝖲𝖨𝖢𝖠𝖫 𝖢𝖮𝖱𝖤𝖲</b> : {p_core}\n' \
+            f'<b>𝖳𝖮𝖳𝖠𝖫 𝖢𝖮𝖱𝖤𝖲</b> : {t_core}\n\n' \
+            f'<b>𝖲𝖶𝖠𝖯</b> : {swap_t}\n' \
+            f'<b>𝖴𝖲𝖤𝖣</b> : {swap_p}\n' \
             f'<b>𝖬𝖤𝖬𝖮𝖱𝖸</b>\n' \
-            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖳𝖮𝖳𝖠𝖫</i></b>: {mem_t}\n' \
-            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖥𝖱𝖤𝖤</i></b>: {mem_a}\n' \
-            f'<b><i>𝖬𝖤𝖬𝖮𝖱𝖸 𝖴𝖲𝖤𝖣</i></b>: {mem_u}\n'         
+            f'<b>𝖬𝖤𝖬𝖮𝖱𝖸 𝖳𝖮𝖳𝖠𝖫</b> : {mem_t}\n' \
+            f'<b>𝖬𝖤𝖬𝖮𝖱𝖸 𝖥𝖱𝖤𝖤</b> : {mem_a}\n' \
+            f'<b>𝖬𝖤𝖬𝖮𝖱𝖸 𝖴𝖲𝖤𝖣</b> : {mem_u}\n'         
     keyboard = [[InlineKeyboardButton("CLOSE", callback_data="stats_close")]]
     main = sendMarkup(stats, context.bot, update, reply_markup=InlineKeyboardMarkup(keyboard))
 
