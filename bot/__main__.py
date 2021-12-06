@@ -48,7 +48,7 @@ def stats(update, context):
     mem_a = get_readable_file_size(memory.available)
     mem_u = get_readable_file_size(memory.used)
     stats = f'▶ 𝖱𝖴𝖭𝖭𝖨𝖭𝖦 𝖲𝖨𝖭𝖢𝖤 ▶ : {currentTime}\n' \
-            f'<b>ᴅɪꜱᴋ ɪɴꜰᴏ</b>\n' \
+            f'<b>𝖣𝖨𝖲𝖪 𝖨𝖭𝖥𝖮</b>\n' \
             f'<b>ᴛᴏᴛᴀʟ</b> : {total}\n' \
             f'<b>ᴜꜱᴇᴅ</b> : {used} ~ ' \
             f'<b>ꜰʀᴇᴇ</b> : {free}\n\n' \
@@ -62,6 +62,7 @@ def stats(update, context):
             f'<b>𝖢𝖮𝖱𝖤𝖲</b>\n' \
             f'<b>ᴘʜʏꜱɪᴄᴀʟ ᴄᴏʀᴇꜱ</b> : {p_core}\n' \
             f'<b>ᴛᴏᴛᴀʟ ᴄᴏʀᴇꜱ</b> : {t_core}\n\n' \
+            f'<b>𝖲𝖶𝖠𝖯</b>\n' \
             f'<b>ꜱᴡᴀᴘ</b> : {swap_t}\n' \
             f'<b>ᴜꜱᴇᴅ</b> : {swap_p}\n\n' \
             f'<b>𝖬𝖤𝖬𝖮𝖱𝖸</b>\n' \
