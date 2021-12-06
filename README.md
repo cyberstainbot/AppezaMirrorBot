@@ -479,7 +479,7 @@ To Clone or Leech gdtot link follow these steps:
 # Credits
 
 Thanks to:
-- [`priiiiyo`](https://github.com/priiiiyo) for custom mod 👨‍🦰
+- [`iamSMMH`](https://github.com/iamSMMH) for custom mod 👨‍🦰
 - [`out386`](https://github.com/out386) heavily inspired from his Telegram Bot written in Typescript
 - [`Izzy12`](https://github.com/lzzy12) for build up of this bot from scratch
 - [`jaskaranSM`](https://github.com/jaskaranSM) for build up of this bot from scratch
@@ -492,4 +492,4 @@ Thanks to:
 - [`yash-dk`](https://github.com/yash-dk) for implementation of qBittorrent on Python
 - [`xyou365`](https://github.com/xyou365) for Service Accounts script
 
-And many more people who aren't mentioned here, but can be found in [Contributors](https://github.com/PriiiiyoDevs/priiiiyo-mirrorbot/graphs/contributors).
+And many more people who aren't mentioned here, but can be found in [Contributors](https://github.com/PriiiiyoDevs/priiiiyo-mirror-leech-bot/graphs/contributors).
