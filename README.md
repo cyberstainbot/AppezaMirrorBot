@@ -1,6 +1,6 @@
 [![iamSMMH](https://telegra.ph/file/09fed8481eb8c4f65d31c.jpg)](https://t.me/MirrorLeechBotUpdates)
 
-# Priiiiyo Mirror Leech Bot
+# Mirror Leech Bot
 ![GitHub Repo stars](https://img.shields.io/github/stars/PriiiiyoDevs/mirror-leech-bot?color=blue&style=flat)
 ![GitHub forks](https://img.shields.io/github/forks/PriiiiyoDevs/mirrorbot?color=green&style=flat)
 ![GitHub contributors](https://img.shields.io/github/contributors/PriiiiyoDevs/mirror-leech-bot?style=flat)
