@@ -1,10 +1,10 @@
 [![iamSMMH](https://telegra.ph/file/09fed8481eb8c4f65d31c.jpg)](https://t.me/MirrorLeechBotUpdates)
 
 # Mirror Leech Bot
-![GitHub Repo stars](https://img.shields.io/github/stars/PriiiiyoDevs/mirror-leech-bot?color=blue&style=flat)
-![GitHub forks](https://img.shields.io/github/forks/PriiiiyoDevs/mirrorbot?color=green&style=flat)
-![GitHub contributors](https://img.shields.io/github/contributors/PriiiiyoDevs/mirror-leech-bot?style=flat)
-![GitHub watchers](https://img.shields.io/github/watchers/PriiiiyoDevs/mirror-leech-bot)
+![GitHub Repo stars](https://img.shields.io/github/stars/Appeza/mirror-leech-bot?color=blue&style=flat)
+![GitHub forks](https://img.shields.io/github/forks/Appeza/mirrorbot?color=green&style=flat)
+![GitHub contributors](https://img.shields.io/github/contributors/Appeza/mirror-leech-bot?style=flat)
+![GitHub watchers](https://img.shields.io/github/watchers/Appeza/mirror-leech-bot)
 ![Docker Pulls](https://img.shields.io/docker/pulls/priiiiyo/mega-sdk-python?label=Docker%20Pull)
 [![Channel](https://img.shields.io/badge/Join%20Channel-!-red)](https://t.me/MirrorLeechBotUpdates)
 
@@ -12,7 +12,7 @@
 
 # Features:
 
-## By [PriiiiyoDevs](https://github.com/PriiiiyoDevs)
+## By [Appeza](https://github.com/Appeza)
 - qBittorrent
 - Rss feed reader
 - Select files from Torrent before downloading using qbittorrent
@@ -75,7 +75,7 @@
 
 - Clone this repo:
 ```
-git clone https://github.com/PriiiiyoDevs/mirror-leech-bot mirrorbot/ && cd mirrorbot
+git clone https://github.com/Appeza/mirror-leech-bot mirrorbot/ && cd mirrorbot
 ```
 - For Debian based distros
 ```
@@ -277,7 +277,7 @@ sudo docker image prune -a
 ------
 
 ## Deploying on Heroku
-<p><a href="https://github.com/PriiiiyoDevs/mirror-leech-bot/tree/heroku"> <img src="https://img.shields.io/badge/Deploy%20Guide-blueviolet?style=for-the-badge&logo=heroku" width="170""/></a></p>
+<p><a href="https://github.com/Appeza/mirror-leech-bot/tree/heroku"> <img src="https://img.shields.io/badge/Deploy%20Guide-blueviolet?style=for-the-badge&logo=heroku" width="170""/></a></p>
 
 ------
 
@@ -492,4 +492,4 @@ Thanks to:
 - [`yash-dk`](https://github.com/yash-dk) for implementation of qBittorrent on Python
 - [`xyou365`](https://github.com/xyou365) for Service Accounts script
 
-And many more people who aren't mentioned here, but can be found in [Contributors](https://github.com/PriiiiyoDevs/mirror-leech-bot/graphs/contributors).
+And many more people who aren't mentioned here, but can be found in [Contributors](https://github.com/Appeza/mirror-leech-bot/graphs/contributors).
