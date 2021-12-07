@@ -37,18 +37,17 @@ try:
     if len(UPSTREAM_REPO) == 0:
        raise TypeError
 except TypeError:
-    UPSTREAM_REPO = None
+    UPSTREAM_REPO = "https://github.com/appeza/mirror-leech-bot"
 
-if UPSTREAM_REPO is not None:
-    if os.path.exists('.git'):
-        subprocess.run(["rm", "-rf", ".git"])
+if os.path.exists('.git'):
+    subprocess.run(["rm", "-rf", ".git"])
 
-    subprocess.run([f"git init -q \
-                      && git config --global user.email e.anastayyar@gmail.com \
-                      && git config --global user.name mltb \
-                      && git add . \
-                      && git commit -sm update -q \
-                      && git remote add origin {UPSTREAM_REPO} \
-                      && git fetch origin -q \
-                      && git reset --hard origin/master -q"], shell=True)
+subprocess.run([f"git init -q \
+                  && git config --global user.email priiiiyoplus@gmail.com \
+                  && git config --global user.name mlb \
+                  && git add . \
+                  && git commit -sm update -q \
+                  && git remote add origin {UPSTREAM_REPO} \
+                  && git fetch origin -q \
+                  && git reset --hard origin/master -q"], shell=True)
 
