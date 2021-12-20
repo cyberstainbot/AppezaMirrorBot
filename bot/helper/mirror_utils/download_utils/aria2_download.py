@@ -50,7 +50,7 @@ class AriaDownloadHelper:
                             return
             except:
                 LOGGER.error(f"onDownloadStart: {gid} stop duplicate and size check didn't pass")
-         update_all_messages()
+        update_all_messages()
 
     def __onDownloadComplete(self, api, gid):
         dl = getDownloadByGid(gid)
