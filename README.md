@@ -1,14 +1,14 @@
 [![iamSMMH](https://telegra.ph/file/09fed8481eb8c4f65d31c.jpg)](https://t.me/MirrorLeechBotUpdates)
 
-# Mirror Leech Bot
-![GitHub Repo stars](https://img.shields.io/github/stars/Appeza/mirror-leech-bot?color=blue&style=flat)
-![GitHub forks](https://img.shields.io/github/forks/Appeza/mirrorbot?color=green&style=flat)
-![GitHub contributors](https://img.shields.io/github/contributors/Appeza/mirror-leech-bot?style=flat)
-![GitHub watchers](https://img.shields.io/github/watchers/Appeza/mirror-leech-bot)
+# MirLeech-Telegram
+![GitHub Repo stars](https://img.shields.io/github/stars/Appeza/MirLeech-Telegram?color=blue&style=flat)
+![GitHub forks](https://img.shields.io/github/forks/Appeza/MirLeech-Telegram?color=green&style=flat)
+![GitHub contributors](https://img.shields.io/github/contributors/Appeza/MirLeech-Telegram?style=flat)
+![GitHub watchers](https://img.shields.io/github/watchers/Appeza/MirLeech-Telegram)
 ![Docker Pulls](https://img.shields.io/docker/pulls/priiiiyo/mega-sdk-python?label=Docker%20Pull)
 [![Channel](https://img.shields.io/badge/Join%20Channel-!-red)](https://t.me/MirrorLeechBotUpdates)
 
-**Mirror Leech Bot** is a _multipurpose_ Telegram Bot written in Python for mirroring files on the Internet to our beloved Google Drive. Based on [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
+**MirLeech-Telegram** is a _multipurpose_ Telegram Bot written in Python for mirroring files on the Internet to our beloved Google Drive. Based on [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
 
 # Features:
 
@@ -75,7 +75,7 @@
 
 - Clone this repo:
 ```
-git clone https://github.com/Appeza/mirror-leech-bot mirrorbot/ && cd mirrorbot
+git clone https://github.com/Appeza/MirLeech-Telegram mirrorbot/ && cd mirrorbot
 ```
 - For Debian based distros
 ```
@@ -493,4 +493,4 @@ Thanks to:
 - [`yash-dk`](https://github.com/yash-dk) for implementation of qBittorrent on Python
 - [`xyou365`](https://github.com/xyou365) for Service Accounts script
 
-And many more people who aren't mentioned here, but can be found in [Contributors](https://github.com/Appeza/mirror-leech-bot/graphs/contributors).
+And many more people who aren't mentioned here, but can be found in [Contributors](https://github.com/Appeza/MirLeech-Telegram/graphs/contributors).
