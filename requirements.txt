@@ -6,11 +6,11 @@ attrdict
 beautifulsoup4
 cfscrape
 feedparser
+gc-python-utils
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
 gunicorn
-js2py
 lk21
 lxml
 pillow
@@ -23,9 +23,9 @@ python-dotenv
 python-magic
 python-telegram-bot
 qbittorrent-api
-quoters
 requests
 speedtest-cli
+six
 telegraph
 tenacity
 TgCrypto
