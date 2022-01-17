@@ -1,15 +1,17 @@
-import re
-import threading
-import time
-import math
-import psutil
-import shutil
+import re import match, findall
+import threading import Thread, Event
+import time import time
+import math import ceil
+import psutil import virtual_memory, cpu_percent, disk_usage
+from requests import head as rhead
+from urllib.request import urlopen
+from telegram import InlineKeyboardMarkup
 
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot import dispatcher, download_dict, download_dict_lock, STATUS_LIMIT, botStartTime
 from telegram import InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler
-from bot.helper.telegram_helper import button_build, message_utils
+from bot.helper.telegram_helper.button_build import ButtonMaker
 
 MAGNET_REGEX = r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*"
 
@@ -280,6 +282,22 @@ def new_thread(fn):
         return thread
 
     return wrapper
+
+def get_content_type(link: str):
+    try:
+        res = rhead(link, allow_redirects=True, timeout=5)
+        content_type = res.headers.get('content-type')
+    except:
+        content_type = None
+
+    if content_type is None:
+        try:
+            res = urlopen(link, timeout=5)
+            info = res.info()
+            content_type = info.get_content_type()
+        except:
+            content_type = None
+    return content_type
 
 
 next_handler = CallbackQueryHandler(turn, pattern="nex", run_async=True)
