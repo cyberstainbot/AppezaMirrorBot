@@ -162,10 +162,7 @@ class YoutubeDLHelper:
         if qual.startswith('ba/b'):
             audio_info = qual.split('-')
             qual = audio_info[0]
-            if len(audio_info) == 2:
-                rate = audio_info[1]
-            else:
-                rate = 320
+            rate = audio_info[1] if len(audio_info) == 2 else 320
             self.opts['postprocessors'] = [{'key': 'FFmpegExtractAudio','preferredcodec': 'mp3','preferredquality': f'{rate}'}]
         self.opts['format'] = qual
         LOGGER.info(f"Downloading with YT-DLP: {link}")

@@ -58,14 +58,14 @@ def _def_batch_resp(id, resp, exception):
         if str(exception).startswith('<HttpError 429'):
             sleep(sleep_time / 100)
         else:
-            print(str(exception))
+            print(exception)
 
 
 # Project Creation Batch Handler
 def _pc_resp(id, resp, exception):
     global project_create_ops
     if exception is not None:
-        print(str(exception))
+        print(exception)
     else:
         for i in resp.values():
             project_create_ops.append(i)

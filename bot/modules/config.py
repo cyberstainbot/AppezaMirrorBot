@@ -18,7 +18,7 @@ async def set_varr(client, message, app_):
     if not _var:
         await msg_.edit("`Here is Usage Syntax: /setvar KEY VALUE`", parse_mode="markdown")
         return
-    if not " " in _var:
+    if " " not in _var:
         await msg_.edit("`Variable VALUE needed !`", parse_mode="markdown")
         return
     var_ = _var.split(" ", 1)
@@ -43,7 +43,7 @@ async def del_varr(client, message, app_):
     if not _var:
         await msg_.edit("`Give Var Name As Input!`", parse_mode="markdown")
         return
-    if not _var in heroku_var:
+    if _var not in heroku_var:
         await msg_.edit("`This Var Doesn't Exists!`", parse_mode="markdown")
         return
     await msg_.edit(
@@ -67,8 +67,17 @@ async def config_menu(_, message):
     await message.reply(
         f"**Hello {message.from_user.mention}**,\n\n**If you want to add or set Variable in Heroku use** `/setvar`\n\n**If you want to delete Variable in Heroku use `/delvar`**\n\n**WARNING! Very Recommended to do this command in private since it's contain Bot info.**\n\n**Here's This is Slam-MirrorBot Current Configs**",
         reply_markup=types.InlineKeyboardMarkup(
-            [[types.InlineKeyboardButton(f"{emoji.CROSS_MARK}", callback_data='docs_end'), types.InlineKeyboardButton(f"BOT CONFIG", callback_data='docs_1')]]
-        )
+            [
+                [
+                    types.InlineKeyboardButton(
+                        f"{emoji.CROSS_MARK}", callback_data='docs_end'
+                    ),
+                    types.InlineKeyboardButton(
+                        'BOT CONFIG', callback_data='docs_1'
+                    ),
+                ]
+            ]
+        ),
     )
 
 @app.on_callback_query(filters.regex('^docs_') & filters.user(OWNER_ID))

@@ -33,7 +33,7 @@ def shell(update, context):
                 filename=doc.name,
                 reply_to_message_id=message.message_id,
                 chat_id=message.chat_id)
-    elif len(reply) != 0:
+    elif reply != '':
         sendMessage(reply, context.bot, update)
     else:
         sendMessage('No Reply', context.bot, update)
