@@ -1,5 +1,3 @@
-from bot import BOT_NO
-
 class _BotCommands:
     def __init__(self):
         self.StartCommand = 'start'
@@ -31,9 +29,7 @@ class _BotCommands:
         self.QbZipMirrorCommand = 'qbzipmirror'
         self.DeleteCommand = 'del'
         self.ShellCommand = 'shell'
-        self.TsHelpCommand = 'tshelp'
         self.ExecHelpCommand = 'exechelp'
-        self.RssHelpCommand = 'rsshelp'
         self.LeechSetCommand = 'leechset'
         self.SetThumbCommand = 'setthumb'
         self.LeechCommand = 'leech'

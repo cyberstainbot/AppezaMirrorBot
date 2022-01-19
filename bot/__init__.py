@@ -100,7 +100,6 @@ get_client().application.set_preferences({"add_trackers":f"{trackerslist}"})
 
 DOWNLOAD_DIR = None
 BOT_TOKEN = None
-BOT_NO = ""
 
 download_dict_lock = Lock()
 status_reply_dict_lock = Lock()
@@ -143,12 +142,7 @@ try:
 except:
     pass
 try:
-    BOT_NO = getConfig('BOT_NO')
-except KeyError:
-    BOT_NO = ""
-try:
     BOT_TOKEN = getConfig('BOT_TOKEN')
-    CHAT_NAME = getConfig('CHAT_NAME')
     parent_id = getConfig('GDRIVE_FOLDER_ID')
     DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
     if not DOWNLOAD_DIR.endswith("/"):

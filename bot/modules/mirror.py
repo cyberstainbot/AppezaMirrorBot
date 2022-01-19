@@ -14,7 +14,7 @@ from telegram import InlineKeyboardMarkup
 from bot import Interval, INDEX_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, \
                 BUTTON_SIX_NAME, BUTTON_SIX_URL, BLOCK_MEGA_FOLDER, BLOCK_MEGA_LINKS, VIEW_LINK, aria2, QB_SEED, \
                 dispatcher, DOWNLOAD_DIR, download_dict, download_dict_lock, TG_SPLIT_SIZE, LOGGER
-from bot.helper.ext_utils.bot_utils import get_readable_file_size, is_url, is_magnet, is_gdtot_link, is_mega_link, is_gdrive_link, get_content_type, get_mega_link_type
+from bot.helper.ext_utils.bot_utils import is_url, is_magnet, is_gdtot_link, is_mega_link, is_gdrive_link, get_content_type, get_mega_link_type
 from bot.helper.ext_utils.fs_utils import get_base_name, get_path_size, split as fssplit, clean_download
 from bot.helper.ext_utils.shortenurl import short_url
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException, NotSupportedExtractionArchive
@@ -91,10 +91,11 @@ class MirrorListener:
                 LOGGER.info('File to archive not found!')
                 self.onUploadError('Internal error occurred!!')
                 return
-            try:
-                rmtree(m_path, ignore_errors=True)
-            except:
-                osremove(m_path)
+            if not self.isQbit or not QB_SEED or self.isLeech:
+                try:
+                    rmtree(m_path)
+                except:
+                    osremove(m_path)
         elif self.extract:
             try:
                 if ospath.isfile(m_path):
@@ -142,7 +143,6 @@ class MirrorListener:
             path = f'{DOWNLOAD_DIR}{self.uid}/{name}'
         up_name = PurePath(path).name
         up_path = f'{DOWNLOAD_DIR}{self.uid}/{up_name}'
-        size = get_path_size(f'{DOWNLOAD_DIR}{self.uid}')
         if self.isLeech and not self.isZip:
             checked = False
             for dirpath, subdir, files in walk(f'{DOWNLOAD_DIR}{self.uid}', topdown=False):
@@ -158,6 +158,7 @@ class MirrorListener:
                         fssplit(f_path, f_size, file_, dirpath, TG_SPLIT_SIZE)
                         osremove(f_path)
         if self.isLeech:
+            size = get_path_size(f'{DOWNLOAD_DIR}{self.uid}')
             LOGGER.info(f"Leech Name: {up_name}")
             tg = TgUploader(up_name, self)
             tg_upload_status = TgUploadStatus(tg, size, gid, self)
@@ -166,6 +167,7 @@ class MirrorListener:
             update_all_messages()
             tg.upload()
         else:
+            size = get_path_size(up_path)
             LOGGER.info(f"Upload Name: {up_name}")
             drive = GoogleDriveHelper(up_name, self)
             upload_status = UploadStatus(drive, size, gid, self)
@@ -191,25 +193,11 @@ class MirrorListener:
         else:
             update_all_messages()
 
-    def onUploadComplete(self, link: str, size, files, folders, typ):
+    def onUploadComplete(self, link: str, size, files, folders, typ, name: str):
         if self.isLeech:
-            if self.isQbit and QB_SEED:
-                pass
-            else:
-                with download_dict_lock:
-                    try:
-                        clean_download(download_dict[self.uid].path())
-                    except FileNotFoundError:
-                        pass
-                    del download_dict[self.uid]
-                    dcount = len(download_dict)
-                if dcount == 0:
-                    self.clean()
-                else:
-                    update_all_messages()
             count = len(files)
-            msg = f'<b>Name: </b><code>{link}</code>\n\n'
-            msg += f'<b>Size: </b>{get_readable_file_size(size)}\n'
+            msg = f'<b>Name: </b><code>{name}</code>\n\n'
+            msg += f'<b>Size: </b>{size}\n'
             msg += f'<b>Total Files: </b>{count}'
             if typ != 0:
                 msg += f'\n<b>Corrupted Files: </b>{typ}'
@@ -224,28 +212,38 @@ class MirrorListener:
                     link = f"https://t.me/c/{chat_id}/{msg_id}"
                     fmsg += f"{index}. <a href='{link}'>{item}</a>\n"
                     if len(fmsg.encode('utf-8') + msg.encode('utf-8')) > 4000:
-                        sleep(2)
+                        sleep(1.5)
                         sendMessage(msg + fmsg, self.bot, self.update)
                         fmsg = ''
                 if fmsg != '':
-                    sleep(2)
+                    sleep(1.5)
                     sendMessage(msg + fmsg, self.bot, self.update)
-            return
-
-        with download_dict_lock:
-            msg = f'<b>Name: </b><code>{download_dict[self.uid].name()}</code>\n\n<b>Size: </b>{size}'
+            try:
+                clean_download(f'{DOWNLOAD_DIR}{self.uid}')
+            except FileNotFoundError:
+                pass
+            with download_dict_lock:
+                del download_dict[self.uid]
+                dcount = len(download_dict)
+            if dcount == 0:
+                self.clean()
+            else:
+                update_all_messages()
+        else:
+            msg = f'<b>Name: </b><code>{name}</code>\n\n<b>Size: </b>{size}'
             msg += f'\n\n<b>Type: </b>{typ}'
-            if ospath.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
+            if ospath.isdir(f'{DOWNLOAD_DIR}{self.uid}/{name}'):
                 msg += f'\n<b>SubFolders: </b>{folders}'
                 msg += f'\n<b>Files: </b>{files}'
+            msg += f'\n\n<b>cc: </b>{self.tag}'
             buttons = ButtonMaker()
             link = short_url(link)
             buttons.buildbutton("☁️ Drive Link", link)
-            LOGGER.info(f'Done Uploading {download_dict[self.uid].name()}')
+            LOGGER.info(f'Done Uploading {name}')
             if INDEX_URL is not None:
-                url_path = requests.utils.quote(f'{download_dict[self.uid].name()}')
+                url_path = requests.utils.quote(f'{name}')
                 share_url = f'{INDEX_URL}/{url_path}'
-                if ospath.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
+                if ospath.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{name}'):
                     share_url += '/'
                     share_url = short_url(share_url)
                     buttons.buildbutton("⚡ Index Link", share_url)
@@ -262,22 +260,26 @@ class MirrorListener:
                 buttons.buildbutton(f"{BUTTON_FIVE_NAME}", f"{BUTTON_FIVE_URL}")
             if BUTTON_SIX_NAME is not None and BUTTON_SIX_URL is not None:
                 buttons.buildbutton(f"{BUTTON_SIX_NAME}", f"{BUTTON_SIX_URL}")
-        msg += f'\n\n<b>cc: </b>{self.tag}'
-        if self.isQbit and QB_SEED:
-           return sendMarkup(msg, self.bot, self.update, InlineKeyboardMarkup(buttons.build_menu(2)))
-        else:
-            with download_dict_lock:
+            if self.isQbit and QB_SEED and not self.extract:
+               if self.isZip:
+                   try:
+                       osremove(f'{DOWNLOAD_DIR}{self.uid}/{name}')
+                   except:
+                       pass
+               return sendMarkup(msg, self.bot, self.update, InlineKeyboardMarkup(buttons.build_menu(2)))
+            else:
                 try:
-                    clean_download(download_dict[self.uid].path())
+                    clean_download(f'{DOWNLOAD_DIR}{self.uid}')
                 except FileNotFoundError:
                     pass
-                del download_dict[self.uid]
-                count = len(download_dict)
-            sendMarkup(msg, self.bot, self.update, InlineKeyboardMarkup(buttons.build_menu(2)))
-            if count == 0:
-                self.clean()
-            else:
-                update_all_messages()
+                with download_dict_lock:
+                    del download_dict[self.uid]
+                    count = len(download_dict)
+                sendMarkup(msg, self.bot, self.update, InlineKeyboardMarkup(buttons.build_menu(2)))
+                if count == 0:
+                    self.clean()
+                else:
+                    update_all_messages()
 
     def onUploadError(self, error):
         e_str = error.replace('<', '').replace('>', '')
