@@ -11,13 +11,18 @@ def list_folder(update,context):
     try:
         search = update.message.text.split(' ',maxsplit=1)[1]
     except IndexError:
-        sendMessage(f'<b><i>Send A Keyword Along With Search Command</i></b>', context.bot, update)
+        sendMessage(
+            '<b><i>Send A Keyword Along With Search Command</i></b>',
+            context.bot,
+            update,
+        )
+
         return
-   
-    reply = sendMessage(f'<b>Searching...🔎</b>', context.bot, update)
+
+    reply = sendMessage('<b>Searching...🔎</b>', context.bot, update)
 
     LOGGER.info(f"Searching: {search}")
-        
+
     gdrive = GoogleDriveHelper(None)
     msg, button = gdrive.drive_list(search)
 

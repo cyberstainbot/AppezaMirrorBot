@@ -169,7 +169,11 @@ def rss_monitor(context):
                     break
                 parse = True
                 for list in data[3]:
-                    if not any(x in str(rss_d.entries[feed_count]['title']).lower() for x in list):
+                    if all(
+                        x
+                        not in str(rss_d.entries[feed_count]['title']).lower()
+                        for x in list
+                    ):
                         parse = False
                         feed_count += 1
                         break

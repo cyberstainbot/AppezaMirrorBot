@@ -183,9 +183,7 @@ class TorrentSearch:
         
     @staticmethod
     def format_magnet(string: str):
-        if not string:
-            return ""
-        return string.split('&tr', 1)[0]
+        return "" if not string else string.split('&tr', 1)[0]
 
     def get_formatted_string(self, values):
         string = self.RESULT_STR.format(**values)
