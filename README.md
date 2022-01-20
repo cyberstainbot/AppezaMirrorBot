@@ -1,14 +1,14 @@
-[![iamSMMH](https://telegra.ph/file/09fed8481eb8c4f65d31c.jpg)](https://t.me/MirrorLeechBotUpdates)
+[![priiiiyo](https://telegra.ph/file/09fed8481eb8c4f65d31c.jpg)](https://t.me/tgmirrorleechbot)
 
-# MirLeech-Telegram
-![GitHub Repo stars](https://img.shields.io/github/stars/Appeza/MirLeech-Telegram?color=blue&style=flat)
-![GitHub forks](https://img.shields.io/github/forks/Appeza/MirLeech-Telegram?color=green&style=flat)
-![GitHub contributors](https://img.shields.io/github/contributors/Appeza/MirLeech-Telegram?style=flat)
-![GitHub watchers](https://img.shields.io/github/watchers/Appeza/MirLeech-Telegram)
+# TG-Mirror-Leech-Bot
+![GitHub Repo stars](https://img.shields.io/github/stars/Appeza/tg-mirror-leech-bot?color=blue&style=flat)
+![GitHub forks](https://img.shields.io/github/forks/Appeza/tg-mirror-leech-bot?color=green&style=flat)
+![GitHub contributors](https://img.shields.io/github/contributors/Appeza/tg-mirror-leech-bot?style=flat)
+![GitHub watchers](https://img.shields.io/github/watchers/Appeza/tg-mirror-leech-bot)
 ![Docker Pulls](https://img.shields.io/docker/pulls/priiiiyo/mega-sdk-python?label=Docker%20Pull)
-[![Channel](https://img.shields.io/badge/Join%20Channel-!-red)](https://t.me/MirrorLeechBotUpdates)
+[![Channel](https://img.shields.io/badge/Join%20Channel-!-red)](https://t.me/tgmirrorleechbot)
 
-**MirLeech-Telegram** is a _multipurpose_ Telegram Bot written in Python for mirroring files on the Internet to our beloved Google Drive. Based on [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
+**TG-Mirror-Leech-Bot** is a _multipurpose_ Telegram Bot written in Python for mirroring files on the Internet to our beloved Google Drive. Based on [python-aria-mirror-bot](https://github.com/lzzy12/python-aria-mirror-bot)
 
 # Features:
 
@@ -75,7 +75,7 @@
 
 - Clone this repo:
 ```
-git clone https://github.com/Appeza/MirLeech-Telegram mirrorbot/ && cd mirrorbot
+git clone https://github.com/Appeza/tg-mirror-leech-bot mirrorbot/ && cd mirrorbot
 ```
 - For Debian based distros
 ```
@@ -480,7 +480,7 @@ To Clone or Leech gdtot link follow these steps:
 # Credits
 
 Thanks to:
-- [`iamSMMH`](https://github.com/iamSMMH) for custom mod 👨‍🦰
+- [`priiiiyo`](https://github.com/priiiiyo) for custom mod 👨‍🦰
 - [`out386`](https://github.com/out386) heavily inspired from his Telegram Bot written in Typescript
 - [`Izzy12`](https://github.com/lzzy12) for build up of this bot from scratch
 - [`jaskaranSM`](https://github.com/jaskaranSM) for build up of this bot from scratch
@@ -493,4 +493,4 @@ Thanks to:
 - [`yash-dk`](https://github.com/yash-dk) for implementation of qBittorrent on Python
 - [`xyou365`](https://github.com/xyou365) for Service Accounts script
 
-And many more people who aren't mentioned here, but can be found in [Contributors](https://github.com/Appeza/MirLeech-Telegram/graphs/contributors).
+And many more people who aren't mentioned here, but can be found in [Contributors](https://github.com/Appeza/tg-mirror-leech-bot/graphs/contributors).
