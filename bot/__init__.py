@@ -3,7 +3,7 @@ import socket
 import faulthandler
 
 from telegram.ext import Updater as tgUpdater
-from qbittorrentapi import TorrentsAPIMixIn, Client as qbClient
+from qbittorrentapi import Client as qbClient
 from aria2p import API as ariaAPI, Client as ariaClient
 from os import remove as osremove, path as ospath, environ
 from requests import get as rget
@@ -63,8 +63,8 @@ if not ospath.exists('.netrc'):
 srun(["cp", ".netrc", "/root/.netrc"])
 srun(["chmod", "600", ".netrc"])
 srun(["chmod", "+x", "aria.sh"])
-srun(["./aria.sh"], shell=True)
-sleep(0.5)
+a2c = Popen(["./aria.sh"], shell=True)
+sleep(1)
 
 Interval = []
 DRIVES_NAMES = []
@@ -86,7 +86,7 @@ aria2 = ariaAPI(
     )
 )
 
-def get_client() -> TorrentsAPIMixIn:
+def get_client():
     return qbClient(host="localhost", port=8090)
 
 """
@@ -175,7 +175,8 @@ def aria2c_init():
     try:
         logging.info("Initializing Aria2c")
         link = "https://releases.ubuntu.com/21.10/ubuntu-21.10-desktop-amd64.iso.torrent"
-        aria2.add_uris([link], {'dir': DOWNLOAD_DIR})
+        dire = DOWNLOAD_DIR.rstrip("/")
+        aria2.add_uris([link], {'dir': dire})
         sleep(3)
         downloads = aria2.get_downloads()
         sleep(30)
@@ -183,6 +184,7 @@ def aria2c_init():
             aria2.remove([download], force=True, files=True)
     except Exception as e:
         logging.error(f"Aria2c initializing error: {e}")
+        pass
 
 if not ospath.isfile(".restartmsg"):
     Thread(target=aria2c_init).start()
@@ -301,6 +303,14 @@ try:
         RSS_DELAY = int(RSS_DELAY)
 except KeyError:
     RSS_DELAY = 900
+try:
+    QB_TIMEOUT = getConfig('QB_TIMEOUT')
+    if len(QB_TIMEOUT) == 0:
+        raise KeyError
+    else:
+        QB_TIMEOUT = int(QB_TIMEOUT)
+except KeyError:
+    QB_TIMEOUT = None
 try:
     BUTTON_FOUR_NAME = getConfig('BUTTON_FOUR_NAME')
     BUTTON_FOUR_URL = getConfig('BUTTON_FOUR_URL')
@@ -505,13 +515,6 @@ try:
     if len(SEARCH_PLUGINS) == 0:
         raise KeyError
     SEARCH_PLUGINS = jsnloads(SEARCH_PLUGINS)
-    qbclient = get_client()
-    qb_plugins = qbclient.search_plugins()
-    if qb_plugins:
-        for plugin in qb_plugins:
-            p = plugin['name']
-            qbclient.search_uninstall_plugin(names=p)
-    qbclient.search_install_plugin(SEARCH_PLUGINS)
 except KeyError:
     SEARCH_PLUGINS = None
 

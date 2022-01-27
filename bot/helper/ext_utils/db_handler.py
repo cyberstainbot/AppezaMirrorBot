@@ -173,7 +173,8 @@ class DbManger:
 
     def user_check(self, uid: int):
         self.cur.execute("SELECT * FROM users WHERE uid = {}".format(uid))
-        return self.cur.fetchone()
+        res = self.cur.fetchone()
+        return res
 
     def rss_add(self, name, link, last, title, filters):
         if self.err:

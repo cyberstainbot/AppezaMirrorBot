@@ -1,6 +1,5 @@
 import itertools
 
-from qbittorrentapi import SearchAPIMixIn, Client as qbClient
 from requests import get as rget
 from time import sleep
 from threading import Thread
@@ -9,7 +8,7 @@ from urllib.parse import quote
 from telegram import InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackQueryHandler
 
-from bot import dispatcher, LOGGER, SEARCH_API_LINK, SEARCH_PLUGINS
+from bot import dispatcher, LOGGER, SEARCH_API_LINK, SEARCH_PLUGINS, get_client
 from bot.helper.ext_utils.telegraph_helper import telegraph
 from bot.helper.telegram_helper.message_utils import editMessage, sendMessage, sendMarkup
 from bot.helper.telegram_helper.filters import CustomFilters
@@ -17,7 +16,15 @@ from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.ext_utils.bot_utils import get_readable_file_size
 from bot.helper.telegram_helper import button_build
 
-PLUGINS = []
+if SEARCH_PLUGINS is not None:
+    PLUGINS = []
+    qbclient = get_client()
+    qb_plugins = qbclient.search_plugins()
+    if qb_plugins:
+        for plugin in qb_plugins:
+            qbclient.search_uninstall_plugin(names=plugin['name'])
+    qbclient.search_install_plugin(SEARCH_PLUGINS)
+    qbclient.auth_log_out()
 
 SITES = {
     "1337x": "1337x",
@@ -42,8 +49,6 @@ SITES = {
 
 SEARCH_LIMIT = 200
 
-def _srch_client() -> SearchAPIMixIn:
-    return qbClient(host="localhost", port=8090)
 
 def torser(update, context):
     user_id = update.message.from_user.id
@@ -58,10 +63,10 @@ def torser(update, context):
         buttons.sbutton("Cancel", f"torser {user_id} cancel")
         button = InlineKeyboardMarkup(buttons.build_menu(2))
         sendMarkup('Choose tool to search:', context.bot, update, button)
-    elif SEARCH_API_LINK is not None:
+    elif SEARCH_API_LINK is not None and SEARCH_PLUGINS is None:
         button = _api_buttons(user_id)
         sendMarkup('Choose site to search:', context.bot, update, button)
-    elif SEARCH_PLUGINS is not None:
+    elif SEARCH_API_LINK is None and SEARCH_PLUGINS is not None:
         button = _plugin_buttons(user_id)
         sendMarkup('Choose site to search:', context.bot, update, button)
     else:
@@ -106,14 +111,15 @@ def _search(key, site, message, tool):
             search_results = resp.json()
             if site == "all":
                 search_results = list(itertools.chain.from_iterable(search_results))
-            if not isinstance(search_results, list):
+            if isinstance(search_results, list):
+                msg = f"<b>Found {min(len(search_results), SEARCH_LIMIT)}</b>"
+                msg += f" <b>result for <i>{key}</i>\nTorrent Site:- <i>{SITES.get(site)}</i></b>"
+            else:
                 return editMessage(f"No result found for <i>{key}</i>\nTorrent Site:- <i>{SITES.get(site)}</i>", message)
-            msg = f"<b>Found {min(len(search_results), SEARCH_LIMIT)}</b>"
-            msg += f" <b>result for <i>{key}</i>\nTorrent Site:- <i>{SITES.get(site)}</i></b>"
         except Exception as e:
             editMessage(str(e), message)
     else:
-        client = _srch_client()
+        client = get_client()
         search = client.search_start(pattern=str(key), plugins=str(site), category='all')
         search_id = search.id
         while True:
@@ -124,10 +130,11 @@ def _search(key, site, message, tool):
         dict_search_results = client.search_results(search_id=search_id)
         search_results = dict_search_results.results
         total_results = dict_search_results.total
-        if total_results == 0:
+        if total_results != 0:
+            msg = f"<b>Found {min(total_results, SEARCH_LIMIT)}</b>"
+            msg += f" <b>result for <i>{key}</i>\nTorrent Site:- <i>{site.capitalize()}</i></b>"
+        else:
             return editMessage(f"No result found for <i>{key}</i>\nTorrent Site:- <i>{site.capitalize()}</i>", message)
-        msg = f"<b>Found {min(total_results, SEARCH_LIMIT)}</b>"
-        msg += f" <b>result for <i>{key}</i>\nTorrent Site:- <i>{site.capitalize()}</i></b>"
     link = _getResult(search_results, key, message, tool)
     buttons = button_build.ButtonMaker()
     buttons.buildbutton("🔎 VIEW", link)
@@ -221,20 +228,23 @@ def _api_buttons(user_id):
     for data, name in SITES.items():
         buttons.sbutton(name, f"torser {user_id} {data} api")
     buttons.sbutton("Cancel", f"torser {user_id} cancel")
-    return InlineKeyboardMarkup(buttons.build_menu(2))
+    button = InlineKeyboardMarkup(buttons.build_menu(2))
+    return button
 
 def _plugin_buttons(user_id):
     buttons = button_build.ButtonMaker()
     if not PLUGINS:
-        client = _srch_client()
-        sites = client.search_plugins()
-        for name in sites:
+        qbclient = get_client()
+        pl = qbclient.search_plugins()
+        for name in pl:
             PLUGINS.append(name['name'])
+        qbclient.auth_log_out()
     for siteName in PLUGINS:
         buttons.sbutton(siteName.capitalize(), f"torser {user_id} {siteName} plugin")
     buttons.sbutton('All', f"torser {user_id} all plugin")
     buttons.sbutton("Cancel", f"torser {user_id} cancel")
-    return InlineKeyboardMarkup(buttons.build_menu(2))
+    button = InlineKeyboardMarkup(buttons.build_menu(2))
+    return button
 
 
 torser_handler = CommandHandler(BotCommands.SearchCommand, torser, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)

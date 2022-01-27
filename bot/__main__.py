@@ -12,7 +12,7 @@ from telegram import ParseMode, InlineKeyboardMarkup
 from telegram.ext import CommandHandler
 
 from wserver import start_server_async
-from bot import bot, app, dispatcher, updater, botStartTime, IGNORE_PENDING_REQUESTS, IS_VPS, PORT, alive, web, OWNER_ID, AUTHORIZED_CHATS, LOGGER, Interval, nox, rss_session
+from bot import bot, app, dispatcher, updater, botStartTime, IGNORE_PENDING_REQUESTS, IS_VPS, PORT, alive, web, OWNER_ID, AUTHORIZED_CHATS, LOGGER, Interval, nox, rss_session, a2c
 from .helper.ext_utils.fs_utils import start_cleanup, clean_all, exit_clean_up
 from .helper.telegram_helper.bot_commands import BotCommands
 from .helper.telegram_helper.message_utils import sendMessage, sendMarkup, editMessage, sendLogFile
@@ -62,8 +62,8 @@ def stats(update, context):
 
 def start(update, context):
     buttons = ButtonMaker()
-    buttons.buildbutton("Repo", "https://www.github.com/anasty17/mirror-leech-telegram-bot")
-    buttons.buildbutton("Report Group", "https://t.me/+MwgSi5vmQEA2N2Vk")
+    buttons.buildbutton("Repo", "https://www.github.com/Appeza/tg-mirror-leech-bot")
+    buttons.buildbutton("Report Group", "https://t.me/+TWOOFONY5TZAgIgL")
     reply_markup = InlineKeyboardMarkup(buttons.build_menu(2))
     if CustomFilters.authorized_user(update) or CustomFilters.authorized_chat(update):
         start_string = f'''
@@ -85,8 +85,11 @@ def restart(update, context):
     procs.kill()
     clean_all()
     srun(["python3", "update.py"])
-    # Save restart message object in order to reply to it after restarting
     nox.kill()
+    a2cproc = psprocess(a2c.pid)
+    for proc in a2cproc.children(recursive=True):
+        proc.kill()
+    a2cproc.kill()
     with open(".restartmsg", "w") as f:
         f.truncate(0)
         f.write(f"{restart_message.chat.id}\n{restart_message.message_id}\n")
@@ -173,7 +176,7 @@ help_string_telegraph = f'''<br>
 '''
 
 help = telegraph.create_page(
-        title='Mirror-Leech-Bot Help',
+        title='TG-Mirror-Leech-Bot Help',
         content=help_string_telegraph,
     )["path"]
 
