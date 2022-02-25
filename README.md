@@ -60,8 +60,8 @@ This is a Telegram Bot written in Python for mirroring files on the Internet to 
 ## Prerequisites
 
 - Tutorial Video from A to Z:
-  - Thanks to [Wiszky](https://github.com/vishnoe115)
-<p><a href="https://www.youtube.com/watch?v=gFQWJ4ftt48"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
+  - Thanks to [CyberStainBot](https://github.com/cyberstainbot)
+<p><a href="https://youtu.be/bKtkk1pqHV4"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
 
 ### 1. Installing requirements
 
@@ -215,9 +215,9 @@ sudo docker image prune -a
 4. Check the number of processing units of your machine with `nproc` cmd and times it by 4, then edit `AsyncIOThreadsCount` in qBittorrent.conf.
 5. Use `priiiiyo/mltb-oracle:latest` for oracle or if u faced problem with arm64 docker run.
    - Tutorial Video for Deploying on Oracle VPS:
-     - Thanks to [Wiszky](https://github.com/vishnoe115)
+     - Thanks to [CyberStainBot](https://github.com/cyberstainbot)
      - No need to use sudo su, you can also use sudo before each cmd!
-<p><a href="https://youtu.be/IzUG7U7v4U4?t=968"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
+<p><a href="https://youtu.be/bKtkk1pqHV4"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
 
 ------
 
